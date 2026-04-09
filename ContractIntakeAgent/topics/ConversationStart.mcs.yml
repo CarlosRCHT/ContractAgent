@@ -1,0 +1,31 @@
+mcs.metadata:
+  componentName: Conversation Start
+  description: Welcomes users and explains contract intake capabilities.
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnConversationStart
+  id: main
+  actions:
+    - kind: SendActivity
+      id: sendMessage_csIntake
+      activity:
+        text:
+          - >-
+            Welcome to the **Contract Intake and Triage** service. I can help
+            you with:
+
+
+            📋 **Contract Classification** — Identify contract type (Vendor,
+            Customer, NDA, Partnership, Maintenance)
+
+            ⚡ **Urgency Assessment** — Determine review timeline (Standard,
+            Expedited, Critical)
+
+            👥 **Team Routing** — Identify required review teams (Legal, Tax,
+            Insurance, Cybersecurity)
+
+            📝 **Metadata Collection** — Gather key contract details
+
+
+            Please describe the contract you'd like to submit, or upload the
+            contract document for analysis.

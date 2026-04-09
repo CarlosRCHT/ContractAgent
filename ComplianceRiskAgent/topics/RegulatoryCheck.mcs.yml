@@ -1,0 +1,116 @@
+mcs.metadata:
+  componentName: Regulatory Check
+  description: Assesses data privacy regulations, industry regulations, and multilingual requirements compliance.
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    displayName: Regulatory Check
+    triggerQueries:
+      - Check regulatory compliance
+      - Data Privacy Regulation compliance check
+      - Industry regulations review
+      - Multilingual requirements check
+      - Regulatory requirements assessment
+      - Does this contract meet regulations
+      - Privacy compliance review
+      - Industry regulatory check
+      - Accessibility requirements
+      - regulatory compliance
+
+  actions:
+    - kind: SendActivity
+      id: sendMessage_regIntro
+      activity: I'll assess regulatory compliance for your contract across privacy, industry, multilingual, and accessibility requirements.
+
+    - kind: Question
+      id: question_involvesPersonalData
+      variable: init:Topic.InvolvesPersonalData
+      prompt: Does this contract involve the collection, use, or disclosure of personal information?
+      entity: BooleanPrebuiltEntity
+
+    - kind: Question
+      id: question_isIndustryRegulated
+      variable: init:Topic.IsIndustryRegulated
+      prompt: Is this contract related to specialized industry operations or regulated services?
+      entity: BooleanPrebuiltEntity
+
+    - kind: Question
+      id: question_isRegionalLanguage
+      variable: init:Topic.IsRegionalLanguage
+      prompt: Will any services be delivered in a region with specific language requirements?
+      entity: BooleanPrebuiltEntity
+
+    - kind: Question
+      id: question_isCustomerFacing
+      variable: init:Topic.IsCustomerFacing
+      prompt: Does this contract involve customer-facing services or digital interfaces?
+      entity: BooleanPrebuiltEntity
+
+    - kind: ConditionGroup
+      id: conditionGroup_pipeda
+      conditions:
+        - id: conditionItem_personalData
+          condition: =Topic.InvolvesPersonalData = true
+          actions:
+            - kind: SendActivity
+              id: sendMessage_pipeda
+              activity: "## 📋 Data Privacy Regulation Compliance Assessment\n\n**Personal Information Involved:** Yes\n\n**Required Data Privacy Regulation Provisions:**\n- ✅ Privacy impact assessment must be completed\n- ✅ Consent mechanisms defined for personal information collection\n- ✅ Data retention and destruction policies aligned with Contoso standards\n- ✅ Right of access and correction provisions included in contract\n- ✅ Privacy breach notification procedures established\n- ✅ Cross-border transfer provisions compliant with applicable data privacy regulations\n\n**Data Processing Requirements:**\n- Vendor may only process personal information as necessary for contracted services\n- Personal information must not be used for secondary purposes without consent\n- Adequate safeguards for cross-border transfers must be documented\n\n**Status:** 🟡 Verify all data privacy regulation provisions are present in contract"
+
+      elseActions:
+        - kind: SendActivity
+          id: sendMessage_noPipeda
+          activity: "## 📋 Data Privacy Regulation Assessment\n\n**Personal Information Involved:** No\n**Status:** 🟢 Data privacy regulation-specific provisions not required"
+
+    - kind: ConditionGroup
+      id: conditionGroup_industry
+      conditions:
+        - id: conditionItem_industry
+          condition: =Topic.IsIndustryRegulated = true
+          actions:
+            - kind: SendActivity
+              id: sendMessage_industry
+              activity: "## 📋 Industry Regulatory Assessment\n\n**Operations-Related Contract:** Yes\n\n**Required Compliance:**\n- ✅ Industry-specific regulatory compliance verified\n- ✅ Security regulatory requirements met for security-related services\n- ✅ Applicable regulatory requirements addressed\n- ✅ Industry standards compliance confirmed where applicable\n- ✅ Facility-specific requirements reviewed for site-specific contracts\n\n**Status:** 🟡 Industry regulatory review required — consult Industry Compliance team"
+
+      elseActions:
+        - kind: SendActivity
+          id: sendMessage_noIndustryReg
+          activity: "## 📋 Industry Regulatory Assessment\n\n**Operations-Related:** No\n**Status:** 🟢 Industry-specific regulations not applicable"
+
+    - kind: ConditionGroup
+      id: conditionGroup_multilingual
+      conditions:
+        - id: conditionItem_quebec
+          condition: =Topic.IsRegionalLanguage = true
+          actions:
+            - kind: SendActivity
+              id: sendMessage_multilingual
+              activity: "## 🌐 Multilingual Requirements Assessment\n\n**Regional Language Services:** Yes\n\n**Required Provisions:**\n- ✅ Customer-facing materials must be available in all required languages\n- ✅ Contract should be available in all required languages\n- ✅ Dispute resolution provisions must account for language requirements\n- ✅ Service delivery must be available in all required languages\n\n**Status:** 🟡 Verify multilingual provisions are included"
+
+      elseActions:
+        - kind: SendActivity
+          id: sendMessage_noMultilingual
+          activity: "## 🌐 Multilingual Requirements\n\n**Regional Language Services:** No\n**Status:** 🟢 Regional multilingual requirements not applicable (standard multilingual provisions recommended)"
+
+    - kind: ConditionGroup
+      id: conditionGroup_accessibility
+      conditions:
+        - id: conditionItem_customerFacing
+          condition: =Topic.IsCustomerFacing = true
+          actions:
+            - kind: SendActivity
+              id: sendMessage_accessibility
+              activity: "## ♿ Accessibility Assessment\n\n**Customer-Facing Services:** Yes\n\n**Required Compliance:**\n- ✅ Accessibility Act requirements addressed\n- ✅ Regional accessibility compliance for local operations\n- ✅ WCAG 2.1 AA standards for digital services\n- ✅ Accessibility testing provisions included\n\n**Status:** 🟡 Verify accessibility requirements in contract"
+
+      elseActions:
+        - kind: SendActivity
+          id: sendMessage_noAccessibility
+          activity: "## ♿ Accessibility Assessment\n\n**Customer-Facing:** No\n**Status:** 🟢 Customer accessibility requirements not applicable"
+
+    - kind: SendActivity
+      id: sendMessage_regSummary
+      activity: "---\n## 📊 Regulatory Compliance Summary\n\nReview all sections above for your overall regulatory compliance status. Any 🟡 or 🔴 items must be addressed before contract execution. Contact the Compliance team for guidance on resolving any gaps."
+
+    - kind: EndDialog
+      id: endDialog_reg

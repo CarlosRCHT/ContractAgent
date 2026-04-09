@@ -1,0 +1,21 @@
+vendor_id,vendor_name,vendor_type,country,region,industry_vertical,total_contract_value,active_contracts_count,avg_risk_rating,compliance_score,last_audit_date,payment_history,onboarding_date,primary_contact_name,primary_contact_email
+V001,NovaTech Solutions Inc.,Strategic,USA,North America,Technology,11279364.72,2,1.7,84,2024-06-05,Excellent,2018-10-05,Liam Chen,lchen@novatech.example.com
+V002,GlobalServe Consulting Ltd.,Strategic,UK,Europe,Professional Services,10952709.92,2,2.0,77,2025-01-04,Excellent,2018-05-04,Olivia Hart,ohart@globalserve.example.com
+V003,ProMaintain Services Inc.,Preferred,USA,North America,Manufacturing,1534372.06,1,1.0,80,2025-01-15,Good,2019-09-02,Marcus Rivera,mrivera@promaintain.example.com
+V004,SkyBridge Analytics Corp.,Strategic,United States,North America,Technology,4971687.3,2,2.5,100,2024-12-19,Excellent,2020-02-20,Priya Sharma,psharma@skybridge.example.com
+V005,Meridian Consulting,Preferred,USA,North America,Consulting,0.0,0,1.0,76,2025-01-13,Good,2020-03-19,Daniel Kim,dkim@meridian.example.com
+V006,Apex Digital,Preferred,Germany,Europe,Technology,8674172.31,3,1.7,78,2025-01-24,Good,2022-04-22,Anja Mueller,amueller@apexdigital.example.com
+V007,Cornerstone Labs,Standard,USA,North America,Technology,4589533.37,0,1.5,93,2024-02-21,Good,2022-08-03,Jason Park,jpark@cornerstonelabs.example.com
+V008,Pinnacle Systems,Preferred,India,Asia-Pacific,Technology,9045250.09,5,1.8,79,2024-07-03,Excellent,2020-04-10,Ravi Patel,rpatel@pinnaclesys.example.com
+V009,Vanguard Services,Standard,Australia,Asia-Pacific,Professional Services,2975436.58,1,2.0,74,2024-12-28,Fair,2021-01-29,Sophie Turner,sturner@vanguardsvcs.example.com
+V010,TrueNorth Partners,Strategic,United States,North America,Consulting,6782484.96,1,2.0,74,2024-01-24,Excellent,2018-10-08,Catherine Dubois,cdubois@truenorth.example.com
+V011,Redstone Logistics,Standard,USA,North America,Logistics,6182729.46,2,1.7,90,2024-12-23,Good,2022-08-22,Tom Bradley,tbradley@redstonelogistics.example.com
+V012,ClearView Security,Preferred,UK,Europe,Security,833446.29,0,3.0,90,2024-02-22,Excellent,2021-10-02,Emma Whitfield,ewhitfield@clearviewsec.example.com
+V013,BrightPath Staffing,Standard,USA,North America,Staffing,15545550.5,4,2.5,91,2024-08-28,Good,2022-08-06,Maria Santos,msantos@brightpath.example.com
+V014,Horizon Facilities,Standard,Germany,Europe,Facilities,11327968.29,1,1.8,83,2024-04-04,Good,2022-11-29,Klaus Becker,kbecker@horizonfac.example.com
+V015,Summit Engineering,Preferred,Japan,Asia-Pacific,Manufacturing,5207948.63,1,2.0,78,2024-02-28,Excellent,2021-09-05,Yuki Tanaka,ytanaka@summiteng.example.com
+V016,EliteForce Consulting,Standard,India,Asia-Pacific,Consulting,8360036.31,2,1.0,80,2024-02-07,Fair,2023-10-05,Arjun Mehta,amehta@eliteforce.example.com
+V017,Cascade Data Services,New,USA,North America,Technology,2112111.11,0,2.0,95,2024-01-28,Good,2024-12-17,Derek Owens,dowens@cascadedata.example.com
+V018,Ironclad Compliance,Standard,UK,Europe,Professional Services,8154304.89,3,1.3,64,2024-02-13,Good,2022-09-15,Rebecca Stone,rstone@ironcladcomp.example.com
+V019,Northwind Training,New,United States,North America,Professional Services,4497432.91,0,1.0,62,2025-01-26,Fair,2024-10-12,Nadia Bouchard,nbouchard@northwindtrain.example.com
+V020,Zenith Infrastructure,New,Australia,Asia-Pacific,Manufacturing,8915256.36,3,3.0,93,2025-02-08,Fair,2024-11-01,James Crawford,jcrawford@zenithinfra.example.com

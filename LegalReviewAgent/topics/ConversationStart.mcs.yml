@@ -1,0 +1,30 @@
+mcs.metadata:
+  componentName: Conversation Start
+  description: Welcomes users and explains legal review capabilities.
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnConversationStart
+  id: main
+  actions:
+    - kind: SendActivity
+      id: sendMessage_csLegal
+      activity:
+        text:
+          - >-
+            Welcome to the **Legal Review** service. I can help you with:
+
+
+            📖 **Playbook Review** — Review contract clauses against Contoso's legal playbook and approved templates
+
+            ⚠️ **Risk Assessment** — Flag deviations and classify risks
+            (Major, Moderate, Minor)
+
+            🚫 **Prohibited Terms Check** — Identify prohibited language and
+            suggest approved alternatives
+
+            📝 **Alternative Language** — Provide approved replacement clauses
+            from the playbook
+
+
+            Please provide the contract text or describe the clauses you'd like
+            reviewed.

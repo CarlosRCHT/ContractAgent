@@ -1,0 +1,64 @@
+{
+  "$schema": "Azure App Service Configuration Reference",
+  "description": "Configuration reference for deploying the Contract Redline Tool to Azure App Service",
+  "appService": {
+    "name": "contract-redline-tool",
+    "resourceGroup": "rg-contract-agent",
+    "location": "canadacentral",
+    "sku": "B1",
+    "runtime": "PYTHON|3.11",
+    "startupCommand": "startup.sh",
+    "alwaysOn": true
+  },
+  "appSettings": [
+    {
+      "name": "AZURE_TENANT_ID",
+      "value": "<from-key-vault>",
+      "description": "Entra ID tenant ID for Graph API access"
+    },
+    {
+      "name": "AZURE_CLIENT_ID",
+      "value": "<from-key-vault>",
+      "description": "App registration client ID with Graph API permissions"
+    },
+    {
+      "name": "AZURE_CLIENT_SECRET",
+      "value": "<from-key-vault>",
+      "description": "App registration client secret (or use Managed Identity)"
+    },
+    {
+      "name": "API_KEY",
+      "value": "<from-key-vault>",
+      "description": "API key for Copilot Studio to authenticate"
+    },
+    {
+      "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+      "value": "true",
+      "description": "Build Python packages during deployment"
+    },
+    {
+      "name": "WEBSITES_PORT",
+      "value": "8000",
+      "description": "Port the app listens on"
+    }
+  ],
+  "managedIdentity": {
+    "enabled": true,
+    "description": "Use system-assigned managed identity for Graph API access (preferred over client secret in production)"
+  },
+  "graphApiPermissions": {
+    "application": [
+      "Sites.ReadWrite.All",
+      "Files.ReadWrite.All"
+    ],
+    "description": "Required Microsoft Graph API permissions for reading and writing SharePoint files"
+  },
+  "networking": {
+    "httpsOnly": true,
+    "minTlsVersion": "1.2",
+    "cors": {
+      "allowedOrigins": ["https://*.powerapps.com", "https://*.dynamics.com"],
+      "description": "CORS origins for Copilot Studio"
+    }
+  }
+}

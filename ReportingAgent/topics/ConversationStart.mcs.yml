@@ -1,0 +1,32 @@
+mcs.metadata:
+  componentName: Conversation Start
+  description: Welcomes users and explains reporting capabilities.
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnConversationStart
+  id: main
+  actions:
+    - kind: SendActivity
+      id: sendMessage_csReport
+      activity:
+        text:
+          - >-
+            Welcome to the **Contract Summary and Reporting** service. I can
+            help you with:
+
+
+            📊 **Term Extraction** — Extract key contract terms (parties,
+            value, term, payment, obligations)
+
+            📋 **Executive Summary** — Generate a comprehensive executive
+            review summary
+
+            🎯 **Recommendations** — Prioritized recommendations (Must Fix,
+            Should Fix, Consider)
+
+            📅 **Deadlines & Obligations** — Identify key dates and party
+            obligations
+
+
+            Please provide the contract text or review findings you'd like me
+            to summarize.

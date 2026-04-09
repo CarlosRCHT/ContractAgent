@@ -1,0 +1,112 @@
+mcs.metadata:
+  componentName: Insurance and Cybersecurity
+  description: Validates insurance requirements and cybersecurity compliance.
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    displayName: Insurance and Cybersecurity
+    triggerQueries:
+      - Check insurance requirements
+      - Verify cybersecurity compliance
+      - Insurance and cyber review
+      - Does the vendor have adequate insurance
+      - SOC 2 compliance check
+      - ISO 27001 verification
+      - Data residency requirements
+      - Breach notification check
+      - Cyber insurance requirements
+      - Security certification check
+
+  actions:
+    - kind: SendActivity
+      id: sendMessage_insurCyberIntro
+      activity: I'll verify insurance coverage and cybersecurity compliance for your contract. Let me collect the relevant details.
+
+    - kind: Question
+      id: question_contractValue
+      variable: init:Topic.ContractValue
+      prompt: What is the contract value in local currency?
+      entity: NumberPrebuiltEntity
+
+    - kind: Question
+      id: question_serviceCategory
+      variable: init:Topic.ServiceCategory
+      prompt: "What category of service does this contract cover? Please enter one: it_technology, consulting, maintenance, financial, general, or other."
+      entity: StringPrebuiltEntity
+
+    - kind: Question
+      id: question_dataHandling
+      variable: init:Topic.DataSensitivity
+      prompt: "What level of data will the vendor handle? Please enter one: public, internal, personal, or payment."
+      entity: StringPrebuiltEntity
+
+    - kind: Question
+      id: question_hasSecurityCerts
+      variable: init:Topic.HasSecurityCerts
+      prompt: Does the vendor hold any security certifications? (e.g., SOC 2 Type II, ISO 27001, PCI DSS). Please list them, or type "None" if unknown.
+      entity: StringPrebuiltEntity
+
+    - kind: SendActivity
+      id: sendMessage_insuranceAssessment
+      activity: "## 🛡️ Insurance Requirements Assessment\n\n**Contract Value:** ${Topic.ContractValue}\n**Service Category:** {Topic.ServiceCategory}\n\n**Required Insurance Coverages:**"
+
+
+    - kind: ConditionGroup
+      id: conditionGroup_insuranceTier
+      conditions:
+        - id: conditionItem_highValue
+          condition: =Topic.ContractValue > 1000000
+          actions:
+            - kind: SendActivity
+              id: sendMessage_highInsurance
+              activity: "- **General Liability:** $10,000,000 per occurrence (Tier 3)\n- **Contoso named as additional insured:** Required\n- **30-day cancellation notice:** Required\n- **Carrier rating:** A- (Excellent) or better by AM Best"
+
+        - id: conditionItem_midValue
+          condition: =Topic.ContractValue > 100000
+          actions:
+            - kind: SendActivity
+              id: sendMessage_midInsurance
+              activity: "- **General Liability:** $5,000,000 per occurrence (Tier 2)\n- **Contoso named as additional insured:** Required\n- **30-day cancellation notice:** Required\n- **Carrier rating:** A- (Excellent) or better by AM Best"
+
+      elseActions:
+        - kind: SendActivity
+          id: sendMessage_lowInsurance
+          activity: "- **General Liability:** $2,000,000 per occurrence (Tier 1)\n- **Contoso named as additional insured:** Required\n- **30-day cancellation notice:** Required\n- **Carrier rating:** A- (Excellent) or better by AM Best"
+
+    - kind: SendActivity
+      id: sendMessage_cyberAssessment
+      activity: "## 🔒 Cybersecurity Compliance Assessment\n\n**Data Sensitivity:** {Topic.DataSensitivity}\n**Vendor Certifications:** {Topic.HasSecurityCerts}\n\n**Required Security Controls:**\n- Encryption at rest: AES-256 minimum\n- Encryption in transit: TLS 1.2 minimum\n- Multi-factor authentication for administrative access\n- Annual penetration testing by independent third party\n- Vulnerability management program with defined SLAs\n- Access controls based on principle of least privilege\n\n**Data Residency:**\n- Customer personal data must be stored in approved jurisdictions\n- Backup data must reside in approved jurisdictions\n- No data transfer to restricted countries\n\n**Breach Notification:**\n- Vendor must notify Contoso within 72 hours of breach discovery\n- Must include: nature of breach, data affected, remediation steps\n- Vendor bears cost of credit monitoring for affected individuals\n- Post-incident review required within 30 days"
+
+    - kind: ConditionGroup
+      id: conditionGroup_dataSensitivity
+      conditions:
+        - id: conditionItem_payment
+          condition: =Topic.DataSensitivity = "payment"
+          actions:
+            - kind: SendActivity
+              id: sendMessage_pciRequired
+              activity: "**⚠️ PCI DSS Compliance Required**\n- PCI DSS certification is mandatory for payment card data handling\n- Cyber insurance minimum: $10,000,000\n- **Status:** 🔴 Cannot proceed without PCI DSS certification"
+
+        - id: conditionItem_personal
+          condition: =Topic.DataSensitivity = "personal"
+          actions:
+            - kind: SendActivity
+              id: sendMessage_personalData
+              activity: "**Security Certifications Required:**\n- SOC 2 Type II or ISO 27001 certification required\n- Cyber insurance minimum: $5,000,000\n- Data privacy regulation compliance verification required\n- **Status:** 🟡 Verify certifications before proceeding"
+
+        - id: conditionItem_internal
+          condition: =Topic.DataSensitivity = "internal"
+          actions:
+            - kind: SendActivity
+              id: sendMessage_internalData
+              activity: "**Security Certifications Required:**\n- SOC 2 Type II or ISO 27001 recommended\n- Cyber insurance minimum: $2,000,000\n- **Status:** 🟡 Certification verification recommended"
+
+      elseActions:
+        - kind: SendActivity
+          id: sendMessage_publicData
+          activity: "**Security Certifications:**\n- No specific cybersecurity certification required for public data\n- Cyber insurance: Not required\n- **Status:** 🟢 Standard security provisions apply"
+
+    - kind: EndDialog
+      id: endDialog_insurCyber

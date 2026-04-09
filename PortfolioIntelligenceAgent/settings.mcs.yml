@@ -1,0 +1,23 @@
+displayName: Contract Portfolio Intelligence Agent
+schemaName: cr57c_portfolioIntelligenceBot
+cdsBotId: 00000000-0000-0000-0000-000000000006
+accessControlPolicy: GroupMembership
+authenticationMode: Integrated
+authenticationTrigger: Always
+configuration:
+  settings:
+    GenerativeActionsEnabled: true
+
+  isAgentConnectable: true
+
+  aISettings:
+    useModelKnowledge: true
+    isFileAnalysisEnabled: true
+    isSemanticSearchEnabled: true
+    optInUseLatestModels: false
+
+  recognizer:
+    kind: GenerativeAIRecognizer
+
+template: default-2.1.0
+language: 1033

@@ -1,0 +1,105 @@
+mcs.metadata:
+  componentName: Urgency Assessment
+  description: Assesses contract urgency and determines review timeline.
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    displayName: Urgency Assessment
+    triggerQueries:
+      - Assess urgency of a contract
+      - How urgent is this contract
+      - Contract priority assessment
+      - Expedite a contract review
+      - Critical contract review needed
+      - Rush contract review
+      - What priority should this contract be
+      - Determine review timeline
+      - I need an expedited review
+      - This contract is time-sensitive
+
+  actions:
+    - kind: SendActivity
+      id: sendMessage_urgencyIntro
+      activity: I'll assess the urgency of your contract to determine the appropriate review timeline. Let me ask a few questions.
+
+    - kind: Question
+      id: question_contractValue
+      variable: init:Topic.ContractValue
+      prompt: What is the contract value in local currency?
+      entity: NumberPrebuiltEntity
+
+    - kind: Question
+      id: question_expirationDate
+      variable: init:Topic.ExpirationContext
+      prompt: Is there an upcoming deadline or expiration date driving this review? If so, please describe (e.g., "Current contract expires in 10 days", "Board meeting in 2 weeks").
+      entity: StringPrebuiltEntity
+
+    - kind: Question
+      id: question_businessImpact
+      variable: init:Topic.BusinessImpact
+      prompt: "What is the business impact if this contract review is delayed? Please enter one: low, medium, high, or critical."
+      entity: StringPrebuiltEntity
+
+    - kind: Question
+      id: question_specialCircumstances
+      variable: init:Topic.SpecialCircumstances
+      prompt: Are there any special circumstances? (e.g., regulatory requirement, board mandate, vendor insolvency risk, competitive situation). Type "None" if not applicable.
+      entity: StringPrebuiltEntity
+
+    - kind: ConditionGroup
+      id: conditionGroup_urgency
+      conditions:
+        - id: conditionItem_critical
+          condition: =Topic.BusinessImpact = "critical" || Topic.ContractValue > 5000000
+          actions:
+            - kind: SetVariable
+              id: setVar_criticalUrgency
+              variable: init:Topic.UrgencyLevel
+              value: "Critical"
+            - kind: SetVariable
+              id: setVar_criticalTimeline
+              variable: init:Topic.ReviewTimeline
+              value: "7 business days"
+            - kind: SetVariable
+              id: setVar_criticalApproval
+              variable: init:Topic.ApprovalRequired
+              value: "SVP approval required for critical timeline"
+
+        - id: conditionItem_expedited
+          condition: =Topic.BusinessImpact = "high" || Topic.ContractValue > 500000
+          actions:
+            - kind: SetVariable
+              id: setVar_expeditedUrgency
+              variable: Topic.UrgencyLevel
+              value: "Expedited"
+            - kind: SetVariable
+              id: setVar_expeditedTimeline
+              variable: Topic.ReviewTimeline
+              value: "14 business days"
+            - kind: SetVariable
+              id: setVar_expeditedApproval
+              variable: Topic.ApprovalRequired
+              value: "VP approval required for expedited timeline"
+
+      elseActions:
+        - kind: SetVariable
+          id: setVar_standardUrgency
+          variable: Topic.UrgencyLevel
+          value: "Standard"
+        - kind: SetVariable
+          id: setVar_standardTimeline
+          variable: Topic.ReviewTimeline
+          value: "30 business days"
+        - kind: SetVariable
+          id: setVar_standardApproval
+          variable: Topic.ApprovalRequired
+          value: "Standard approval process"
+
+    - kind: SendActivity
+      id: sendMessage_urgencyResult
+      activity: "## ⚡ Urgency Assessment Results\n\n**Urgency Level:** {Topic.UrgencyLevel}\n**Review Timeline:** {Topic.ReviewTimeline}\n**Approval:** {Topic.ApprovalRequired}\n\n**Assessment Factors:**\n- Contract Value: ${Topic.ContractValue}\n- Business Impact: {Topic.BusinessImpact}\n- Deadline Context: {Topic.ExpirationContext}\n- Special Circumstances: {Topic.SpecialCircumstances}\n\n---\nThe contract will be prioritized according to the **{Topic.UrgencyLevel}** timeline. All required review teams will be notified of the priority level."
+
+    - kind: EndDialog
+      id: endDialog_urgency

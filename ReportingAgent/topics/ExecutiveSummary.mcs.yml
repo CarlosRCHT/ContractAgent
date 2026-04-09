@@ -1,0 +1,72 @@
+mcs.metadata:
+  componentName: Executive Summary
+  description: Generates comprehensive executive summary with actionable recommendations.
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    displayName: Executive Summary
+    triggerQueries:
+      - Generate executive summary
+      - Create a contract summary
+      - Executive review report
+      - Summarize the contract review
+      - Produce a summary report
+      - I need an executive summary
+      - Create a recommendation report
+      - Generate contract report
+      - Summary for leadership
+      - Contract review summary
+
+  actions:
+    - kind: SendActivity
+      id: sendMessage_execIntro
+      activity: I'll compile a comprehensive executive summary with actionable recommendations. Let me gather the review information.
+
+    - kind: Question
+      id: question_contractName
+      variable: init:Topic.ContractName
+      prompt: What is the name or title of this contract? (e.g., "IT Services Agreement with Vendor X")
+      entity: StringPrebuiltEntity
+
+    - kind: Question
+      id: question_contractParties
+      variable: init:Topic.ContractParties
+      prompt: Who are the contracting parties?
+      entity: StringPrebuiltEntity
+
+    - kind: Question
+      id: question_contractValue
+      variable: init:Topic.ContractValue
+      prompt: What is the total contract value?
+      entity: NumberPrebuiltEntity
+
+    - kind: Question
+      id: question_reviewFindings
+      variable: init:Topic.ReviewFindings
+      prompt: Please provide the review findings from the legal, compliance, and intake stages. You can paste the findings or describe the key issues identified. Include any risk ratings, flagged clauses, and compliance gaps.
+      entity: StringPrebuiltEntity
+
+    - kind: SearchAndSummarizeContent
+      id: search_execSummary
+      userInput: "Generate a comprehensive executive summary for the following contract review. Structure the summary as follows:\n1. OVERVIEW — Contract name, parties, value, term, purpose 2. KEY TERMS SUMMARY — Table format with the most important terms 3. RISK ASSESSMENT SUMMARY — Consolidated risk findings from all review stages with traffic-light indicators (🔴🟡🟢) 4. RECOMMENDATIONS — Categorized as: - Must Fix (blocking issues preventing execution) - Should Fix (strong recommendations that reduce risk) - Consider (optional improvements for better terms) 5. NEXT STEPS — Specific actions with responsible parties and timelines\nContract: {Topic.ContractName} Parties: {Topic.ContractParties} Value: {Topic.ContractValue} Review Findings: {Topic.ReviewFindings}"
+      variable: Topic.ExecSummary
+
+    - kind: ConditionGroup
+      id: conditionGroup_hasSummary
+      conditions:
+        - id: conditionItem_hasSummaryResult
+          condition: =!IsBlank(Topic.ExecSummary)
+          actions:
+            - kind: SendActivity
+              id: sendMessage_execSummaryResult
+              activity: "## 📋 Executive Contract Review Summary\n\n**Contract:** {Topic.ContractName}\n**Parties:** {Topic.ContractParties}\n**Value:** ${Topic.ContractValue}\n\n---\n\n{Topic.ExecSummary}\n\n---\n*This executive summary is generated based on the review findings provided. For the most accurate assessment, ensure all review stages (intake, legal, compliance) have been completed before generating the final summary.*"
+
+      elseActions:
+        - kind: SendActivity
+          id: sendMessage_summaryTemplate
+          activity: "## 📋 Executive Contract Review Summary\n\n**Contract:** {Topic.ContractName}\n**Parties:** {Topic.ContractParties}\n**Value:** ${Topic.ContractValue}\n\n---\n\n### 1. Overview\n[Contract purpose and key identification details]\n\n### 2. Key Terms Summary\n| Term | Details |\n|------|---------|\n| Contract Type | [Type] |\n| Term | [Duration] |\n| Payment Terms | [Terms] |\n| Governing Law | [Jurisdiction] |\n\n### 3. Risk Assessment Summary\n| Area | Status | Key Findings |\n|------|--------|-------------|\n| Legal Review | 🟢🟡🔴 | [Summary] |\n| Tax Compliance | 🟢🟡🔴 | [Summary] |\n| Insurance | 🟢🟡🔴 | [Summary] |\n| Cybersecurity | 🟢🟡🔴 | [Summary] |\n| Regulatory | 🟢🟡🔴 | [Summary] |\n\n### 4. Recommendations\n**Must Fix:**\n- [Blocking issues]\n\n**Should Fix:**\n- [Risk reduction items]\n\n**Consider:**\n- [Optional improvements]\n\n### 5. Next Steps\n- [ ] [Action item with responsible party and deadline]\n\n---\n*Please provide complete review findings for a fully populated executive summary.*"
+
+    - kind: EndDialog
+      id: endDialog_exec

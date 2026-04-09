@@ -1,0 +1,60 @@
+mcs.metadata:
+  componentName: Spend Analytics
+  description: Analyzes spend patterns across the contract portfolio. Shows budget vs. actual variance, identifies over/under-spend by vendor, department, or category, and highlights trends.
+kind: AdaptiveDialog
+beginDialog:
+  kind: OnRecognizedIntent
+  id: main
+  intent:
+    displayName: Spend Analytics
+    triggerQueries:
+      - Spend analysis
+      - Budget variance
+      - Contract spend
+      - Cost trend
+      - Vendor spend
+      - Department spend
+      - Over budget
+      - How much are we spending
+      - Show me spend by category
+      - Year over year cost comparison
+
+  actions:
+    - kind: SendActivity
+      id: sendMessage_spendIntro
+      activity: I'll analyze spend patterns from the portfolio data. Let me understand what dimension you'd like to explore.
+
+    - kind: Question
+      id: question_spendDimension
+      variable: init:Topic.SpendDimension
+      prompt: "What spend dimension would you like to analyze? Please enter one: vendor, department, category, or time-period."
+      entity: StringPrebuiltEntity
+
+    - kind: Question
+      id: question_timePeriod
+      variable: init:Topic.TimePeriod
+      prompt: "What time period should I analyze? For example: current quarter, last 6 months, fiscal year 2024, year-over-year, or a custom range like Jan 2024 to Dec 2024."
+      entity: StringPrebuiltEntity
+
+    - kind: SearchAndSummarizeContent
+      id: search_spend
+      userInput: "Analyze contract spend from Contoso's enterprise data lakehouse. Spend dimension: {Topic.SpendDimension}. Time period: {Topic.TimePeriod}. Provide budget vs. actual variance, identify the top over-spend and under-spend areas, highlight any anomalies or significant year-over-year changes, and provide trend analysis. Include total spend amounts, percentage variance, and rank the results by variance magnitude."
+      variable: Topic.SpendAnalysis
+
+    - kind: ConditionGroup
+      id: conditionGroup_hasSpend
+      conditions:
+        - id: conditionItem_hasSpendResult
+          condition: =!IsBlank(Topic.SpendAnalysis)
+          actions:
+            - kind: SendActivity
+              id: sendMessage_spendResult
+              activity: "## 💰 Spend Analytics Report\n\n**Dimension:** {Topic.SpendDimension}\n**Time Period:** {Topic.TimePeriod}\n\n{Topic.SpendAnalysis}\n\n---\n**Variance Key:** 🔴 Over budget by >10% | 🟡 Variance 5-10% | 🟢 Within 5% of budget\n\nWould you like to drill down into a specific vendor, department, or category?"
+
+      elseActions:
+        - kind: SendActivity
+          id: sendMessage_spendFallback
+          activity: "I was unable to retrieve specific spend data for this query. Here is the general spend analysis framework:\n\n**Spend Analysis Dimensions:**\n- **By Vendor** — Top vendors by total contract value, variance from budgeted amounts\n- **By Department** — Departmental procurement spend vs. allocated budget\n- **By Category** — Spend across contract categories (IT, Professional Services, Maintenance, etc.)\n- **By Time Period** — Quarter-over-quarter and year-over-year trends\n\nPlease refine your query with a specific vendor name, department, or narrower time range for detailed analysis."
+
+    - kind: EndDialog
+      id: endDialog_spend

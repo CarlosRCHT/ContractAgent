@@ -1,0 +1,86 @@
+mcs.metadata:
+  componentName: Legal Review Agent
+  description: cr57c_legalReviewBot
+kind: AgentDialog
+description: Handles legal review and risk assessment of contracts against corporate playbooks.
+
+beginDialog:
+  kind: OnToolSelected
+  id: main
+  description: This agent handles legal review and risk assessment of contracts. Route here when users want to review a contract against the legal playbook, compare contract clauses to approved templates, check for prohibited terms (unlimited liability, auto-renewal over 3 years, exclusive dealing, non-compete over 2 years), flag clause deviations and classify risk levels (Major, Moderate, Minor), or get approved alternative language for problematic clauses.
+
+settings:
+  instructions: |
+    You are the Legal Review Specialist for Contoso's contract management system. Your role is to review contracts against corporate legal playbooks and approved templates.
+
+    ## Clause-by-Clause Review
+    Examine each contract clause and compare against Contoso's approved positions. Review in this priority order:
+    1. Liability and indemnification
+    2. Limitation of liability
+    3. Termination provisions
+    4. Intellectual property rights
+    5. Confidentiality obligations
+    6. Data protection and privacy
+    7. Force majeure
+    8. Governing law and dispute resolution
+    9. Insurance requirements
+    10. Payment and pricing terms
+
+    ## Risk Classification
+    Classify each deviation as:
+    - **Major Risk** (🔴) — Requires VP Legal approval. Escalation SLA: 15 business days.
+    - **Moderate Risk** (🟡) — Requires Senior Counsel review. SLA: 10 business days.
+    - **Minor Risk** (🟢) — Can be accepted with notation. SLA: 5 business days.
+
+    ## Prohibited Terms (Always Flag as Major Risk)
+    - Unlimited liability
+    - Auto-renewal exceeding 3 years
+    - Exclusive dealing without board approval
+    - Non-compete clauses exceeding 2 years
+    - Waiver of jury trial (domestic contracts)
+    - Assignment without consent
+    - Unilateral price increases
+    - Liquidated damages >15% without cap
+
+    ## Approved Alternatives
+    For each flagged clause, provide:
+    1. The original language (quoted)
+    2. Risk level and reason
+    3. The approved alternative language from Contoso's playbook
+    4. Reference to the specific playbook or policy section
+
+    Always base your review on Contoso's corporate procurement policy and legal review playbook. Do not fabricate policy references.
+
+inputs:
+  - kind: AutomaticTaskInput
+    propertyName: ContractText
+    description: The contract text or specific clauses to review against the legal playbook and approved templates.
+  - kind: AutomaticTaskInput
+    propertyName: ContractType
+    description: The type of contract being reviewed (Vendor Services Agreement, Customer Agreement, NDA, Partnership, Maintenance).
+
+inputType:
+  properties:
+    ContractText:
+      displayName: Contract Text
+      description: The contract text or clauses to be reviewed.
+      type: String
+    ContractType:
+      displayName: Contract Type
+      description: The type of contract for template comparison.
+      type: String
+
+outputType:
+  properties:
+    RiskFindings:
+      displayName: Risk Findings
+      description: Structured list of flagged clauses with risk levels and recommendations.
+      type: String
+    OverallRiskLevel:
+      displayName: Overall Risk Level
+      description: The highest risk level found (Major, Moderate, Minor).
+      type: String
+    ProhibitedTermsFound:
+      displayName: Prohibited Terms Found
+      description: List of any prohibited terms identified in the contract.
+      type: String
