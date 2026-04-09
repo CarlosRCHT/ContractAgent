@@ -1,0 +1,11 @@
+mcs.metadata:
+  componentName: Intake Agent (Contracts)
+  description: Contract Intake Specialist for Contoso Air's contract management system to classify incoming contracts, assess their urgency, and determine which review teams need to be involved.
+kind: TaskDialog
+modelDisplayName: Intake Agent (Contracts)
+modelDescription: Contract Intake Specialist for Contoso Air's contract management system to classify incoming contracts, assess their urgency, and determine which review teams need to be involved.
+action:
+  kind: InvokeConnectedAgentTaskAction
+  botSchemaName: cr57c_ContractIntakeAgent
+  historyType:
+    kind: ConversationHistory

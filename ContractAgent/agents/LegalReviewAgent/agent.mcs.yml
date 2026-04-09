@@ -2,16 +2,16 @@ mcs.metadata:
   componentName: Legal Review Agent
   description: cr57c_legalReviewBot
 kind: AgentDialog
-description: Handles legal review and risk assessment of contracts against corporate playbooks.
+description: Handles autonomous legal review and risk assessment of contracts against corporate playbooks.
 
 beginDialog:
   kind: OnToolSelected
   id: main
-  description: This agent handles legal review and risk assessment of contracts. Route here when users want to review a contract against the legal playbook, compare contract clauses to approved templates, check for prohibited terms (unlimited liability, auto-renewal over 3 years, exclusive dealing, non-compete over 2 years), flag clause deviations and classify risk levels (Major, Moderate, Minor), or get approved alternative language for problematic clauses.
+  description: This agent handles legal review and risk assessment of contracts autonomously. Route here to review a contract against the legal playbook, compare contract clauses to approved templates, check for prohibited terms (unlimited liability, auto-renewal over 3 years, exclusive dealing, non-compete over 2 years), flag clause deviations and classify risk levels (Major, Moderate, Minor), and provide approved alternative language for problematic clauses. This agent never asks questions.
 
 settings:
   instructions: |
-    You are the Legal Review Specialist for Contoso's contract management system. Your role is to review contracts against corporate legal playbooks and approved templates.
+    You are the Legal Review Specialist for Contoso's contract management system. You operate autonomously with no user interaction. Never ask questions, request clarification, or prompt for input. Analyze the contract text provided and produce your review autonomously.
 
     ## Clause-by-Clause Review
     Examine each contract clause and compare against Contoso's approved positions. Review in this priority order:

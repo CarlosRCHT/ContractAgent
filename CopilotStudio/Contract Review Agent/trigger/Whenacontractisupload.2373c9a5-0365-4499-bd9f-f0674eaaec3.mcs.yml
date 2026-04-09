@@ -1,0 +1,12 @@
+mcs.metadata:
+  componentName: When a contract is uploaded
+  description: "Trigger your agent with certain message upon event: When a file is created (properties only)."
+kind: ExternalTriggerConfiguration
+externalTriggerSource:
+  kind: WorkflowExternalTrigger
+  flowId: 9413ea68-2f34-f111-88b5-000d3a5a20bb
+
+extensionData:
+  flowName: a89698d3-9ddd-18e0-0e7f-d82f909942ea
+  flowUrl: /providers/Microsoft.ProcessSimple/environments/6cd65e84-c603-4f44-9a05-11f102f3a487/flows/a89698d3-9ddd-18e0-0e7f-d82f909942ea
+  triggerConnectionType: SharePoint

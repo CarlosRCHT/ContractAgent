@@ -1,6 +1,6 @@
 mcs.metadata:
   componentName: Conversation Start
-  description: Welcomes users to Contoso's Contract Management system and explains available capabilities.
+  description: Initializes the Contract Management Orchestrator for autonomous contract processing.
 kind: AdaptiveDialog
 beginDialog:
   kind: OnConversationStart
@@ -8,44 +8,5 @@ beginDialog:
   actions:
     - kind: SendActivity
       id: sendMessage_M0LuhV
-      activity:
-        text:
-          - >-
-            🏢 Welcome to **Contoso Contract Management**!
-
-
-            I'm your contract review orchestrator. I coordinate a team of
-            specialized AI agents to provide comprehensive contract review
-            services:
-
-
-            📋 **Contract Intake & Triage** — Classify contracts, assess
-            urgency, and route to review teams
-
-            ⚖️ **Legal Review** — Review clauses against our legal playbook
-            and flag deviations
-
-            🛡️ **Compliance & Risk** — Verify tax, insurance, cybersecurity,
-            and regulatory compliance
-
-            📊 **Summary & Reporting** — Extract key terms and generate
-            executive summaries
-
-
-            **How can I help you today?** You can:
-
-            - Submit a new contract for full review
-
-            - Check compliance requirements for a specific contract
-
-            - Get an executive summary of review findings
-
-            - Review specific clauses against the legal playbook
-
-            - Assess the urgency and priority of a contract
-        speak:
-          - >-
-            Welcome to Contoso Contract Management. I coordinate
-            specialized agents to help you with contract intake, legal
-            review, compliance assessment, and executive reporting. How
+      activity: Contract Management Orchestrator initialized. Beginning autonomous contract review pipeline — intake, legal review, compliance assessment, portfolio benchmarking, redlining, reporting, and email delivery.
             can I help you today?
