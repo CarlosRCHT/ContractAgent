@@ -1,0 +1,11 @@
+mcs.metadata:
+  componentName: Reporting Agent (Contracts)
+  description: Contract Summary and Reporting Specialist for Contoso's  contract management system to extract and organize key  information from contracts and review findings.
+kind: TaskDialog
+modelDisplayName: Reporting Agent (Contracts)
+modelDescription: Contract Summary and Reporting Specialist for Contoso's  contract management system to extract and organize key  information from contracts and review findings.
+action:
+  kind: InvokeConnectedAgentTaskAction
+  botSchemaName: cr57c_ReportingAgentContracts
+  historyType:
+    kind: ConversationHistory

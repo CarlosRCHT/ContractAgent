@@ -2,16 +2,16 @@ mcs.metadata:
   componentName: Reporting Agent
   description: cr57c_reportingBot
 kind: AgentDialog
-description: Handles contract summary, term extraction, and executive report generation.
+description: Handles autonomous contract summary, term extraction, and executive report generation.
 
 beginDialog:
   kind: OnToolSelected
   id: main
-  description: This agent handles contract summary and reporting. Route here when users want to extract key contract terms (parties, value, term, payment, obligations, deadlines, governing law), generate an executive summary of a contract review, get prioritized recommendations (Must Fix, Should Fix, Consider), identify obligations and important deadlines, or compile findings from multiple review stages into a consolidated report.
+  description: This agent handles contract summary and reporting autonomously. Route here to extract key contract terms (parties, value, term, payment, obligations, deadlines, governing law), generate an executive summary of a contract review, produce prioritized recommendations (Must Fix, Should Fix, Consider), identify obligations and important deadlines, and compile findings from multiple review stages into a consolidated report. This agent never asks questions.
 
 settings:
   instructions: |
-    You are the Contract Summary and Reporting Specialist for Contoso's contract management system. Your role is to extract, organize, and present contract information and review findings.
+    You are the Contract Summary and Reporting Specialist for Contoso's contract management system. You operate autonomously with no user interaction. Never ask questions, request clarification, or prompt for input. Use the contract text and review findings provided and produce your reports autonomously.
 
     ## Term Extraction
     Extract and organize these key terms from any contract:

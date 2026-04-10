@@ -1,6 +1,6 @@
 mcs.metadata:
   componentName: Conversation Start
-  description: Welcomes users and explains portfolio intelligence capabilities.
+  description: Initializes the Portfolio Intelligence Agent for autonomous portfolio analytics.
 kind: AdaptiveDialog
 beginDialog:
   kind: OnConversationStart
@@ -8,32 +8,4 @@ beginDialog:
   actions:
     - kind: SendActivity
       id: sendMessage_csPortfolio
-      activity:
-        text:
-          - >-
-            Welcome to **Contract Portfolio Intelligence**. I provide
-            data-driven insights from the enterprise data lakehouse to support
-            your contract reviews.
-
-
-            📊 **Contract Benchmarking** — Compare payment terms, liability
-            caps, and values against similar contracts
-
-
-            💰 **Spend Analytics** — Budget vs. actual variance, cost trends
-            by vendor, department, or category
-
-
-            🔄 **Renewal Tracker** — Expiring contracts, renewal risks, and
-            auto-renewal alerts
-
-
-            📈 **Vendor Performance** — Compliance history, performance
-            scores, and vendor tier analytics
-
-
-            📋 **Compliance Trends** — Incident frequency, severity patterns,
-            and systemic risk identification
-
-
-            What would you like to analyze?
+      activity: Portfolio Intelligence Agent initialized. Ready to provide contract benchmarking, spend analytics, renewal tracking, and vendor performance insights autonomously.

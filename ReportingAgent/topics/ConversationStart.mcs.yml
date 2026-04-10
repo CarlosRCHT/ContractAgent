@@ -1,6 +1,6 @@
 mcs.metadata:
   componentName: Conversation Start
-  description: Welcomes users and explains reporting capabilities.
+  description: Initializes the Reporting Agent for autonomous report generation.
 kind: AdaptiveDialog
 beginDialog:
   kind: OnConversationStart
@@ -8,24 +8,7 @@ beginDialog:
   actions:
     - kind: SendActivity
       id: sendMessage_csReport
-      activity:
-        text:
-          - >-
-            Welcome to the **Contract Summary and Reporting** service. I can
-            help you with:
-
-
-            📊 **Term Extraction** — Extract key contract terms (parties,
-            value, term, payment, obligations)
-
-            📋 **Executive Summary** — Generate a comprehensive executive
-            review summary
-
-            🎯 **Recommendations** — Prioritized recommendations (Must Fix,
-            Should Fix, Consider)
-
-            📅 **Deadlines & Obligations** — Identify key dates and party
-            obligations
+      activity: Reporting Agent initialized. Ready to extract key terms, compile review findings, and generate executive summaries autonomously.
 
 
             Please provide the contract text or review findings you'd like me

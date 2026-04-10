@@ -1,0 +1,23 @@
+mcs.metadata:
+  componentName: Contract Portfolio Intelligence
+kind: TaskDialog
+inputs:
+  - kind: ManualTaskInput
+    propertyName: artifactId
+    value: 51a2fa68-5918-4c2d-9874-4c774b37c77f
+
+  - kind: ManualTaskInput
+    propertyName: workspaceId
+    value: 2c5b9943-6e2c-48c7-a1e3-4a0bec6304dd
+
+modelDisplayName: Contract Portfolio Intelligence
+modelDescription: Portfolio Intelligence Analyst for Contoso's contract management system to provide data-driven portfolio intelligence by querying historical contract data, vendor performance metrics, spend analytics, and compliance trends from the enterprise data lakehouse.
+action:
+  kind: InvokeExternalAgentTaskAction
+  connectionReference: cr57c_agentqf4ruA.shared_fabricdataagent.54beb87e1f974f62a9af4f5ef2283595
+  connectionProperties:
+    mode: Invoker
+
+  operationDetails:
+    kind: ModelContextProtocolMetadata
+    operationId: InvokeMCP

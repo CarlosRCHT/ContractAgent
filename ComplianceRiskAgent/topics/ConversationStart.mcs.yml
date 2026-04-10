@@ -1,6 +1,6 @@
 mcs.metadata:
   componentName: Conversation Start
-  description: Welcomes users and explains compliance assessment capabilities.
+  description: Initializes the Compliance Risk Agent for autonomous compliance assessment.
 kind: AdaptiveDialog
 beginDialog:
   kind: OnConversationStart
@@ -8,29 +8,4 @@ beginDialog:
   actions:
     - kind: SendActivity
       id: sendMessage_csCompliance
-      activity:
-        text:
-          - >-
-            Welcome to the **Compliance and Risk Assessment** service. I can
-            help you with:
-
-
-            💰 **Tax Compliance** — Verify domestic tax obligations,
-            cross-border implications, transfer pricing
-
-            🛡️ **Insurance Validation** — Check general, professional, and
-            cyber liability coverage requirements
-
-            🔒 **Cybersecurity Check** — Verify SOC 2, ISO 27001, data
-            residency, breach notification clauses
-
-            📋 **Regulatory Compliance** — Assess data privacy regulations, industry regulations,
-            multilingual requirements
-
-
-            I will provide an overall compliance risk score: 🟢 Green (fully
-            compliant), 🟡 Yellow (minor gaps), or 🔴 Red (critical gaps).
-
-
-            Please provide the contract details or specific compliance area
-            you'd like assessed.
+      activity: Compliance Risk Agent initialized. Ready to assess tax, insurance, cybersecurity, and regulatory compliance autonomously.

@@ -1,0 +1,39 @@
+mcs.metadata:
+  componentName: Contract Redline Tool - Redline a contract with tracked changes
+kind: TaskDialog
+inputs:
+  - kind: AutomaticTaskInput
+    propertyName: "'output_filename'"
+
+  - kind: ManualTaskInput
+    propertyName: "'output_folder_url'"
+    value: https://onemtc.sharepoint.com/sites/Procurement/Redlined%20Contracts
+
+modelDisplayName: Redline a contract with tracked changes
+modelDescription: Downloads a Word document from SharePoint, applies tracked changes (insertions/deletions) based on the provided recommendations, adds Word comments with rationale for each change, and uploads the redlined document back to SharePoint.
+outputs:
+  - propertyName: changes_applied
+
+  - propertyName: changes_failed
+
+  - propertyName: comments_added
+
+  - propertyName: error
+
+  - propertyName: output_url
+
+  - propertyName: results
+
+  - propertyName: status
+
+  - propertyName: summary
+
+action:
+  kind: InvokeConnectorTaskAction
+  connectionReference: cr57c_agentqf4ruA.shared_contract-20redline-20tool-5f35b43b433099fba0-5fc6de44a57d7e0e01.48920045dd5a42d8a515907fdba84539
+  connectionProperties:
+    mode: Invoker
+
+  operationId: redline_document_api_redline_post
+
+outputMode: All
