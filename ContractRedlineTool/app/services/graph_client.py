@@ -94,6 +94,7 @@ class GraphClient:
         Handles URLs like:
         - https://contoso.sharepoint.com/sites/mysite/Shared Documents/folder/file.docx
         - https://contoso-my.sharepoint.com/personal/user/Documents/file.docx
+        - https://contoso.sharepoint.com/sites/mysite/Custom Library/file.docx
         """
         parsed = urlparse(url)
         hostname = parsed.hostname
@@ -105,16 +106,23 @@ class GraphClient:
         if site_match:
             site_path = site_match.group(1)
             file_path = site_match.group(2)
-            # Remove common SharePoint path prefixes
-            file_path = re.sub(r"^/Shared Documents", "/Shared Documents", file_path)
         else:
             raise GraphClientError(f"Could not parse SharePoint URL: {url}")
+
+        # Split file_path into library name and item path within the library.
+        # e.g. "/Incoming Contracts/file.docx" -> library="Incoming Contracts", item="/file.docx"
+        # e.g. "/Shared Documents/folder/file.docx" -> library="Shared Documents", item="/folder/file.docx"
+        path_parts = file_path.strip("/").split("/", 1)
+        library_name = path_parts[0] if path_parts else "Shared Documents"
+        item_path = "/" + path_parts[1] if len(path_parts) > 1 else "/"
 
         return {
             "hostname": hostname,
             "site_path": site_path,
             "file_path": file_path,
             "filename": os.path.basename(file_path),
+            "library_name": library_name,
+            "item_path": item_path,
         }
 
     async def get_site_and_drive(
@@ -194,11 +202,12 @@ class GraphClient:
         else:
             parsed = self.parse_sharepoint_url(document_url)
             site_id, drive_id = await self.get_site_and_drive(
-                parsed["hostname"], parsed["site_path"]
+                parsed["hostname"], parsed["site_path"],
+                library_name=parsed["library_name"],
             )
             download_url = (
                 f"https://graph.microsoft.com/v1.0/drives/{drive_id}"
-                f"/root:{parsed['file_path']}:/content"
+                f"/root:{parsed['item_path']}:/content"
             )
             filename = parsed["filename"]
 
@@ -264,12 +273,13 @@ class GraphClient:
         else:
             parsed = self.parse_sharepoint_url(document_url)
             site_id, drive_id = await self.get_site_and_drive(
-                parsed["hostname"], parsed["site_path"]
+                parsed["hostname"], parsed["site_path"],
+                library_name=parsed["library_name"],
             )
             if not output_filename:
                 name, ext = os.path.splitext(parsed["filename"])
                 output_filename = f"{name}_redlined{ext}"
-            parent_path = os.path.dirname(parsed["file_path"])
+            parent_path = os.path.dirname(parsed["item_path"])
             upload_path = f"{parent_path}/{output_filename}"
 
         token = await self._get_token()

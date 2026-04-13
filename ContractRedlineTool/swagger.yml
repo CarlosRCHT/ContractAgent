@@ -1,0 +1,354 @@
+swagger: '2.0'
+info:
+  title: Contract Redline Tool
+  description: >-
+    Redlines Word contracts with tracked changes and rationale comments based on
+    AI agent recommendations. Designed for Copilot Studio integration.
+  version: 1.0.0
+host: contract-redline-app.azurewebsites.net
+basePath: /
+schemes:
+  - https
+consumes: []
+produces: []
+paths:
+  /api/redline:
+    post:
+      tags:
+        - Redline
+      summary: Redline a contract with tracked changes
+      description: >-
+        Downloads a Word document from SharePoint, applies tracked changes
+        (insertions/deletions) based on the provided recommendations, adds Word
+        comments with rationale for each change, and uploads the redlined
+        document back to SharePoint.
+      operationId: redline_document_api_redline_post
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/RedlineRequest'
+      responses:
+        '200':
+          description: Document redlined successfully
+          schema:
+            $ref: '#/definitions/RedlineResponse'
+        '400':
+          description: Invalid request
+        '422':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/HTTPValidationError'
+        '500':
+          description: Internal processing error
+        '502':
+          description: SharePoint communication error
+      security:
+        - APIKeyHeader: []
+  /api/extract-text:
+    post:
+      tags:
+        - Redline
+      summary: Extract plain text from a Word document
+      description: >-
+        Downloads a Word document from SharePoint and extracts all paragraph
+        text as a single plain-text string.
+      operationId: extract_text_api_extract_text_post
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ExtractTextRequest'
+      responses:
+        '200':
+          description: Text extracted successfully
+          schema:
+            $ref: '#/definitions/ExtractTextResponse'
+        '400':
+          description: Invalid request
+        '422':
+          description: Validation Error
+          schema:
+            $ref: '#/definitions/HTTPValidationError'
+        '500':
+          description: Internal processing error
+        '502':
+          description: SharePoint communication error
+      security:
+        - APIKeyHeader: []
+  /health:
+    get:
+      tags:
+        - Health
+      summary: Health Check
+      operationId: health_check_health_get
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/HealthResponse'
+definitions:
+  ExtractTextRequest:
+    title: ExtractTextRequest
+    description: Request to extract plain text from a SharePoint Word document.
+    required:
+      - documentUrl
+    type: object
+    properties:
+      documentUrl:
+        title: Documenturl
+        description: Full URL to the Word document in SharePoint
+        type: string
+  ExtractTextResponse:
+    title: ExtractTextResponse
+    description: Response containing the extracted plain text.
+    required:
+      - status
+    type: object
+    properties:
+      status:
+        title: Status
+        description: '''success'' or ''error'''
+        type: string
+      filename:
+        title: Filename
+        description: Name of the source document
+        default: ''
+        type: string
+      text:
+        title: Text
+        description: Extracted plain text from the document
+        default: ''
+        type: string
+      pageCount:
+        title: Pagecount
+        description: Approximate number of pages (based on paragraph count)
+        default: 0
+        type: integer
+      error:
+        title: Error
+        description: Error message if status is 'error'
+        default: ''
+        type: string
+  ChangeResult:
+    title: ChangeResult
+    description: Result of applying a single change.
+    required:
+      - originalText
+      - replacementText
+      - applied
+      - commentAdded
+    type: object
+    properties:
+      originalText:
+        title: Originaltext
+        type: string
+      replacementText:
+        title: Replacementtext
+        type: string
+      applied:
+        title: Applied
+        type: boolean
+      commentAdded:
+        title: Commentadded
+        type: boolean
+      error:
+        title: Error
+        default: ''
+        type: string
+  HTTPValidationError:
+    title: HTTPValidationError
+    type: object
+    properties:
+      detail:
+        title: Detail
+        type: array
+        items:
+          $ref: '#/definitions/ValidationError'
+  HealthResponse:
+    title: HealthResponse
+    type: object
+    properties:
+      status:
+        title: Status
+        default: healthy
+        type: string
+      version:
+        title: Version
+        default: 1.0.0
+        type: string
+      service:
+        title: Service
+        default: Contract Redline Tool
+        type: string
+  Recommendation:
+    title: Recommendation
+    description: A single recommended change to apply to the contract.
+    required:
+      - originalText
+      - rationale
+    type: object
+    properties:
+      originalText:
+        title: Originaltext
+        description: The exact text in the contract to find and replace
+        minLength: 1
+        type: string
+      replacementText:
+        title: Replacementtext
+        description: >-
+          The new text to insert (tracked as insertion). Leave empty string to
+          only delete.
+        default: ''
+        type: string
+      rationale:
+        title: Rationale
+        description: Explanation for the change, added as a Word comment
+        minLength: 1
+        type: string
+      riskLevel:
+        description: 'Risk severity: major, moderate, or minor'
+        default: moderate
+        enum:
+          - major
+          - moderate
+          - minor
+        type: string
+      section:
+        title: Section
+        description: 'Optional: the contract section where this change applies'
+        default: ''
+        type: string
+  RedlineRequest:
+    title: RedlineRequest
+    description: Request to redline a SharePoint Word document with tracked changes.
+    required:
+      - documentUrl
+      - recommendations
+    type: object
+    properties:
+      documentUrl:
+        title: Documenturl
+        description: Full URL to the Word document in SharePoint
+        type: string
+      recommendations:
+        title: Recommendations
+        description: List of changes to apply
+        minItems: 1
+        type: array
+        items:
+          $ref: '#/definitions/Recommendation'
+      author:
+        title: Author
+        description: Author name for tracked changes and comments
+        default: Contract Review Agent
+        type: string
+      outputFilename:
+        title: Outputfilename
+        description: >-
+          Optional output filename. If empty, appends '_redlined' to original
+          name.
+        default: ''
+        type: string
+      outputFolderUrl:
+        title: Outputfolderurl
+        description: >-
+          Optional SharePoint folder URL for the redlined document. If empty,
+          uploads to the same folder as the source document.
+        default: ''
+        type: string
+  RedlineResponse:
+    title: RedlineResponse
+    description: Response after redlining a document.
+    required:
+      - status
+      - changesApplied
+      - commentsAdded
+    type: object
+    properties:
+      status:
+        title: Status
+        description: '''success'' or ''partial'' or ''error'''
+        type: string
+      outputUrl:
+        title: Outputurl
+        description: URL to the redlined document in SharePoint
+        default: ''
+        type: string
+      changesApplied:
+        title: Changesapplied
+        description: Number of tracked changes successfully applied
+        type: integer
+      changesFailed:
+        title: Changesfailed
+        description: Number of changes that could not be applied
+        default: 0
+        type: integer
+      commentsAdded:
+        title: Commentsadded
+        description: Number of rationale comments added
+        type: integer
+      results:
+        title: Results
+        description: Per-change results
+        type: array
+        items:
+          $ref: '#/definitions/ChangeResult'
+      summary:
+        title: Summary
+        description: Human-readable summary of the redline operation
+        default: ''
+        type: string
+      error:
+        title: Error
+        description: Error message if status is 'error'
+        default: ''
+        type: string
+  RiskLevel:
+    title: RiskLevel
+    enum:
+      - major
+      - moderate
+      - minor
+    type: string
+  ValidationError:
+    title: ValidationError
+    required:
+      - loc
+      - msg
+      - type
+    type: object
+    properties:
+      loc:
+        title: Location
+        type: array
+        items:
+          type: string
+      msg:
+        title: Message
+        type: string
+      type:
+        title: Error Type
+        type: string
+parameters: {}
+responses: {}
+security:
+  - api_key: []
+tags: []
+securityDefinitions:
+  api_key:
+    type: apiKey
+    in: header
+    name: X-API-Key

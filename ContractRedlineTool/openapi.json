@@ -1,1 +1,464 @@
-{"openapi":"3.0.0","info":{"title":"Contract Redline Tool","description":"Redlines Word contracts with tracked changes and rationale comments based on AI agent recommendations. Designed for Copilot Studio integration.","version":"1.0.0"},"paths":{"/api/redline":{"post":{"tags":["Redline"],"summary":"Redline a contract with tracked changes","description":"Downloads a Word document from SharePoint, applies tracked changes (insertions/deletions) based on the provided recommendations, adds Word comments with rationale for each change, and uploads the redlined document back to SharePoint.","operationId":"redline_document_api_redline_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/RedlineRequest"}}},"required":true},"responses":{"200":{"description":"Document redlined successfully","content":{"application/json":{"schema":{"$ref":"#/components/schemas/RedlineResponse"}}}},"400":{"description":"Invalid request"},"502":{"description":"SharePoint communication error"},"500":{"description":"Internal processing error"},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}},"security":[{"APIKeyHeader":[]}]}},"/health":{"get":{"tags":["Health"],"summary":"Health Check","operationId":"health_check_health_get","responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HealthResponse"}}}}}}}},"components":{"schemas":{"ChangeResult":{"properties":{"original_text":{"type":"string","title":"Original Text"},"replacement_text":{"type":"string","title":"Replacement Text"},"applied":{"type":"boolean","title":"Applied"},"comment_added":{"type":"boolean","title":"Comment Added"},"error":{"type":"string","title":"Error","default":""}},"type":"object","required":["original_text","replacement_text","applied","comment_added"],"title":"ChangeResult","description":"Result of applying a single change."},"HTTPValidationError":{"properties":{"detail":{"items":{"$ref":"#/components/schemas/ValidationError"},"type":"array","title":"Detail"}},"type":"object","title":"HTTPValidationError"},"HealthResponse":{"properties":{"status":{"type":"string","title":"Status","default":"healthy"},"version":{"type":"string","title":"Version","default":"1.0.0"},"service":{"type":"string","title":"Service","default":"Contract Redline Tool"}},"type":"object","title":"HealthResponse"},"Recommendation":{"properties":{"original_text":{"type":"string","minLength":1,"title":"Original Text","description":"The exact text in the contract to find and replace"},"replacement_text":{"type":"string","title":"Replacement Text","description":"The new text to insert (tracked as insertion). Leave empty string to only delete.","default":""},"rationale":{"type":"string","minLength":1,"title":"Rationale","description":"Explanation for the change, added as a Word comment"},"risk_level":{"type":"string","enum":["major","moderate","minor"],"description":"Risk severity: major, moderate, or minor","default":"moderate"},"section":{"type":"string","title":"Section","description":"Optional: the contract section where this change applies","default":""}},"type":"object","required":["original_text","rationale"],"title":"Recommendation","description":"A single recommended change to apply to the contract."},"RedlineRequest":{"properties":{"document_url":{"type":"string","title":"Document Url","description":"Full URL to the Word document in SharePoint"},"recommendations":{"items":{"$ref":"#/components/schemas/Recommendation"},"type":"array","minItems":1,"title":"Recommendations","description":"List of changes to apply"},"author":{"type":"string","title":"Author","description":"Author name for tracked changes and comments","default":"Contract Review Agent"},"output_filename":{"type":"string","title":"Output Filename","description":"Optional output filename. If empty, appends '_redlined' to original name.","default":""},"output_folder_url":{"type":"string","title":"Output Folder Url","description":"Optional SharePoint folder URL for the redlined document. If empty, uploads to the same folder as the source document.","default":""}},"type":"object","required":["document_url","recommendations"],"title":"RedlineRequest","description":"Request to redline a SharePoint Word document with tracked changes."},"RedlineResponse":{"properties":{"status":{"type":"string","title":"Status","description":"'success' or 'partial' or 'error'"},"output_url":{"type":"string","title":"Output Url","description":"URL to the redlined document in SharePoint","default":""},"changes_applied":{"type":"integer","title":"Changes Applied","description":"Number of tracked changes successfully applied"},"changes_failed":{"type":"integer","title":"Changes Failed","description":"Number of changes that could not be applied","default":0},"comments_added":{"type":"integer","title":"Comments Added","description":"Number of rationale comments added"},"results":{"items":{"$ref":"#/components/schemas/ChangeResult"},"type":"array","title":"Results","description":"Per-change results"},"summary":{"type":"string","title":"Summary","description":"Human-readable summary of the redline operation","default":""},"error":{"type":"string","title":"Error","description":"Error message if status is 'error'","default":""}},"type":"object","required":["status","changes_applied","comments_added"],"title":"RedlineResponse","description":"Response after redlining a document."},"RiskLevel":{"type":"string","enum":["major","moderate","minor"],"title":"RiskLevel"},"ValidationError":{"properties":{"loc":{"items":{"type":"string"},"type":"array","title":"Location"},"msg":{"type":"string","title":"Message"},"type":{"type":"string","title":"Error Type"}},"type":"object","required":["loc","msg","type"],"title":"ValidationError"}},"securitySchemes":{"APIKeyHeader":{"type":"apiKey","in":"header","name":"X-API-Key"}}}}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Contract Redline Tool",
+    "description": "Redlines Word contracts with tracked changes and rationale comments based on AI agent recommendations. Designed for Copilot Studio integration.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/redline": {
+      "post": {
+        "tags": [
+          "Redline"
+        ],
+        "summary": "Redline a contract with tracked changes",
+        "description": "Downloads a Word document from SharePoint, applies tracked changes (insertions/deletions) based on the provided recommendations, adds Word comments with rationale for each change, and uploads the redlined document back to SharePoint.",
+        "operationId": "redline_document_api_redline_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedlineRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Document redlined successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedlineResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "502": {
+            "description": "SharePoint communication error"
+          },
+          "500": {
+            "description": "Internal processing error"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/api/extract-text": {
+      "post": {
+        "tags": [
+          "Redline"
+        ],
+        "summary": "Extract plain text from a Word document",
+        "description": "Downloads a Word document from SharePoint and extracts all paragraph text as a single plain-text string.",
+        "operationId": "extract_text_api_extract_text_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractTextRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Text extracted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractTextResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "502": {
+            "description": "SharePoint communication error"
+          },
+          "500": {
+            "description": "Internal processing error"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health Check",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ChangeResult": {
+        "properties": {
+          "originalText": {
+            "type": "string",
+            "title": "Originaltext"
+          },
+          "replacementText": {
+            "type": "string",
+            "title": "Replacementtext"
+          },
+          "applied": {
+            "type": "boolean",
+            "title": "Applied"
+          },
+          "commentAdded": {
+            "type": "boolean",
+            "title": "Commentadded"
+          },
+          "error": {
+            "type": "string",
+            "title": "Error",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "originalText",
+          "replacementText",
+          "applied",
+          "commentAdded"
+        ],
+        "title": "ChangeResult",
+        "description": "Result of applying a single change."
+      },
+      "ExtractTextRequest": {
+        "properties": {
+          "documentUrl": {
+            "type": "string",
+            "title": "Documenturl",
+            "description": "Full URL to the Word document in SharePoint"
+          }
+        },
+        "type": "object",
+        "required": [
+          "documentUrl"
+        ],
+        "title": "ExtractTextRequest",
+        "description": "Request to extract plain text from a SharePoint Word document."
+      },
+      "ExtractTextResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "'success' or 'error'"
+          },
+          "filename": {
+            "type": "string",
+            "title": "Filename",
+            "description": "Name of the source document",
+            "default": ""
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "description": "Extracted plain text from the document",
+            "default": ""
+          },
+          "pageCount": {
+            "type": "integer",
+            "title": "Pagecount",
+            "description": "Approximate number of pages (based on paragraph count)",
+            "default": 0
+          },
+          "error": {
+            "type": "string",
+            "title": "Error",
+            "description": "Error message if status is 'error'",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "ExtractTextResponse",
+        "description": "Response containing the extracted plain text."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "healthy"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "default": "1.0.0"
+          },
+          "service": {
+            "type": "string",
+            "title": "Service",
+            "default": "Contract Redline Tool"
+          }
+        },
+        "type": "object",
+        "title": "HealthResponse"
+      },
+      "Recommendation": {
+        "properties": {
+          "originalText": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Originaltext",
+            "description": "The exact text in the contract to find and replace"
+          },
+          "replacementText": {
+            "type": "string",
+            "title": "Replacementtext",
+            "description": "The new text to insert (tracked as insertion). Leave empty string to only delete.",
+            "default": ""
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Rationale",
+            "description": "Explanation for the change, added as a Word comment"
+          },
+          "riskLevel": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RiskLevel"
+              }
+            ],
+            "description": "Risk severity: major, moderate, or minor",
+            "default": "moderate"
+          },
+          "section": {
+            "type": "string",
+            "title": "Section",
+            "description": "Optional: the contract section where this change applies",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "originalText",
+          "rationale"
+        ],
+        "title": "Recommendation",
+        "description": "A single recommended change to apply to the contract."
+      },
+      "RedlineRequest": {
+        "properties": {
+          "documentUrl": {
+            "type": "string",
+            "title": "Documenturl",
+            "description": "Full URL to the Word document in SharePoint"
+          },
+          "recommendations": {
+            "items": {
+              "$ref": "#/components/schemas/Recommendation"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Recommendations",
+            "description": "List of changes to apply"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author",
+            "description": "Author name for tracked changes and comments",
+            "default": "Contract Review Agent"
+          },
+          "outputFilename": {
+            "type": "string",
+            "title": "Outputfilename",
+            "description": "Optional output filename. If empty, appends '_redlined' to original name.",
+            "default": ""
+          },
+          "outputFolderUrl": {
+            "type": "string",
+            "title": "Outputfolderurl",
+            "description": "Optional SharePoint folder URL for the redlined document. If empty, uploads to the same folder as the source document.",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "documentUrl",
+          "recommendations"
+        ],
+        "title": "RedlineRequest",
+        "description": "Request to redline a SharePoint Word document with tracked changes."
+      },
+      "RedlineResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "'success' or 'partial' or 'error'"
+          },
+          "outputUrl": {
+            "type": "string",
+            "title": "Outputurl",
+            "description": "URL to the redlined document in SharePoint",
+            "default": ""
+          },
+          "changesApplied": {
+            "type": "integer",
+            "title": "Changesapplied",
+            "description": "Number of tracked changes successfully applied"
+          },
+          "changesFailed": {
+            "type": "integer",
+            "title": "Changesfailed",
+            "description": "Number of changes that could not be applied",
+            "default": 0
+          },
+          "commentsAdded": {
+            "type": "integer",
+            "title": "Commentsadded",
+            "description": "Number of rationale comments added"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/ChangeResult"
+            },
+            "type": "array",
+            "title": "Results",
+            "description": "Per-change results"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "description": "Human-readable summary of the redline operation",
+            "default": ""
+          },
+          "error": {
+            "type": "string",
+            "title": "Error",
+            "description": "Error message if status is 'error'",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "changesApplied",
+          "commentsAdded"
+        ],
+        "title": "RedlineResponse",
+        "description": "Response after redlining a document."
+      },
+      "RiskLevel": {
+        "type": "string",
+        "enum": [
+          "major",
+          "moderate",
+          "minor"
+        ],
+        "title": "RiskLevel"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

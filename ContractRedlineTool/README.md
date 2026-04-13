@@ -41,18 +41,18 @@ Applies tracked changes to a SharePoint Word document and returns the URL of the
 
 ```json
 {
-  "document_url": "https://contoso.sharepoint.com/sites/contracts/Shared Documents/NDA.docx",
+  "documentUrl": "https://contoso.sharepoint.com/sites/contracts/Shared Documents/NDA.docx",
   "recommendations": [
     {
-      "original_text": "unlimited liability",
-      "replacement_text": "liability not to exceed the total contract value",
+      "originalText": "unlimited liability",
+      "replacementText": "liability not to exceed the total contract value",
       "rationale": "Prohibited term per procurement policy §4.2",
-      "risk_level": "major",
+      "riskLevel": "major",
       "section": "Limitation of Liability"
     }
   ],
   "author": "Contract Review Agent",
-  "output_filename": ""
+  "outputFilename": ""
 }
 ```
 
@@ -61,16 +61,16 @@ Applies tracked changes to a SharePoint Word document and returns the URL of the
 ```json
 {
   "status": "success",
-  "output_url": "https://contoso.sharepoint.com/sites/contracts/Shared Documents/NDA_redlined.docx",
-  "changes_applied": 1,
-  "changes_failed": 0,
-  "comments_added": 1,
+  "outputUrl": "https://contoso.sharepoint.com/sites/contracts/Shared Documents/NDA_redlined.docx",
+  "changesApplied": 1,
+  "changesFailed": 0,
+  "commentsAdded": 1,
   "results": [
     {
-      "original_text": "unlimited liability",
-      "replacement_text": "liability not to exceed the total contract value",
+      "originalText": "unlimited liability",
+      "replacementText": "liability not to exceed the total contract value",
       "applied": true,
-      "comment_added": true,
+      "commentAdded": true,
       "error": ""
     }
   ],
@@ -81,6 +81,30 @@ Applies tracked changes to a SharePoint Word document and returns the URL of the
 ### `GET /health`
 
 Returns `{"status": "healthy", "version": "1.0.0", "service": "Contract Redline Tool"}`.
+
+### `POST /api/extract-text`
+
+Downloads a Word document from SharePoint and returns its plain text content.
+
+**Request Body**
+
+```json
+{
+  "documentUrl": "https://contoso.sharepoint.com/sites/contracts/Shared Documents/NDA.docx"
+}
+```
+
+**Response**
+
+```json
+{
+  "status": "success",
+  "filename": "NDA.docx",
+  "text": "VENDOR SERVICES AGREEMENT\nBetween Contoso and ...",
+  "pageCount": 3,
+  "error": ""
+}
+```
 
 ## Deployment to Azure App Service
 

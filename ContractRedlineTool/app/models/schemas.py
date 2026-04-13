@@ -1,5 +1,11 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from enum import Enum
+
+
+def to_camel(name: str) -> str:
+    """Convert snake_case to camelCase."""
+    parts = name.split("_")
+    return parts[0] + "".join(w.capitalize() for w in parts[1:])
 
 
 class RiskLevel(str, Enum):
@@ -10,6 +16,11 @@ class RiskLevel(str, Enum):
 
 class Recommendation(BaseModel):
     """A single recommended change to apply to the contract."""
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
 
     original_text: str = Field(
         ...,
@@ -38,6 +49,11 @@ class Recommendation(BaseModel):
 class RedlineRequest(BaseModel):
     """Request to redline a SharePoint Word document with tracked changes."""
 
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
+
     document_url: str = Field(
         ..., description="Full URL to the Word document in SharePoint"
     )
@@ -61,6 +77,11 @@ class RedlineRequest(BaseModel):
 class ChangeResult(BaseModel):
     """Result of applying a single change."""
 
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
+
     original_text: str
     replacement_text: str
     applied: bool
@@ -70,6 +91,11 @@ class ChangeResult(BaseModel):
 
 class RedlineResponse(BaseModel):
     """Response after redlining a document."""
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
 
     status: str = Field(description="'success' or 'partial' or 'error'")
     output_url: str = Field(
@@ -97,3 +123,33 @@ class HealthResponse(BaseModel):
     status: str = "healthy"
     version: str = "1.0.0"
     service: str = "Contract Redline Tool"
+
+
+class ExtractTextRequest(BaseModel):
+    """Request to extract plain text from a SharePoint Word document."""
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
+
+    document_url: str = Field(
+        ..., description="Full URL to the Word document in SharePoint"
+    )
+
+
+class ExtractTextResponse(BaseModel):
+    """Response containing the extracted plain text."""
+
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+    )
+
+    status: str = Field(description="'success' or 'error'")
+    filename: str = Field(default="", description="Name of the source document")
+    text: str = Field(default="", description="Extracted plain text from the document")
+    page_count: int = Field(
+        default=0, description="Approximate number of pages (based on paragraph count)"
+    )
+    error: str = Field(default="", description="Error message if status is 'error'")

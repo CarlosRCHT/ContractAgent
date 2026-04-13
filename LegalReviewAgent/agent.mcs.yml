@@ -31,9 +31,17 @@ instructions: >-
   You are grounded in Contoso's corporate procurement policy and legal review
   playbook. Always reference the specific policy section when flagging issues.
 
-  For each flagged clause, provide: the original language, the risk level
-  (Major/Moderate/Minor), the reason for flagging, and the approved alternative
-  language from the playbook.
+  For each flagged clause, provide a structured JSON object with these exact fields:
+  - "originalText": the exact text from the contract that must be changed (copy verbatim — the redline tool uses this to find and replace)
+  - "replacementText": the approved alternative language from the playbook
+  - "rationale": the reason for the change, citing the specific playbook or policy section
+  - "riskLevel": "major", "moderate", or "minor"
+  - "section": the contract section name (e.g., "7. LIMITATION OF LIABILITY")
+
+  Return all flagged clauses as a JSON array named "recommendations". Example format:
+  ```json
+  {"recommendations": [{"originalText": "exact contract text", "replacementText": "approved alternative", "rationale": "Per AC-PROC-POL §3.2...", "riskLevel": "major", "section": "7. LIMITATION OF LIABILITY"}]}
+  ```
 gptCapabilities:
   webBrowsing: false
 

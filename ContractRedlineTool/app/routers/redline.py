@@ -1,7 +1,12 @@
 import os
 import logging
+from docx import Document
 from fastapi import APIRouter, HTTPException
-from app.models.schemas import RedlineRequest, RedlineResponse, ChangeResult
+from fastapi.responses import JSONResponse
+from app.models.schemas import (
+    RedlineRequest, RedlineResponse, ChangeResult,
+    ExtractTextRequest, ExtractTextResponse,
+)
 from app.services.graph_client import graph_client, GraphClientError
 from app.services.redline_engine import RedlineEngine
 from app.config import settings
@@ -128,7 +133,7 @@ async def redline_document(request: RedlineRequest) -> RedlineResponse:
             failed_texts = [r.original_text[:40] for r in results if not r.applied]
             summary += f"{failed} changes could not be applied (text not found): {', '.join(failed_texts)}"
 
-        return RedlineResponse(
+        response = RedlineResponse(
             status=status,
             output_url=output_url,
             changes_applied=applied,
@@ -137,6 +142,7 @@ async def redline_document(request: RedlineRequest) -> RedlineResponse:
             results=change_results,
             summary=summary,
         )
+        return JSONResponse(content=response.model_dump(by_alias=True, mode="json"))
 
     except HTTPException:
         raise
@@ -150,3 +156,71 @@ async def redline_document(request: RedlineRequest) -> RedlineResponse:
             graph_client.cleanup_temp_file(local_path)
         if output_path:
             graph_client.cleanup_temp_file(output_path)
+
+
+@router.post(
+    "/extract-text",
+    response_model=ExtractTextResponse,
+    summary="Extract plain text from a Word document",
+    description=(
+        "Downloads a Word document from SharePoint and extracts all "
+        "paragraph text as a single plain-text string."
+    ),
+    responses={
+        200: {"description": "Text extracted successfully"},
+        400: {"description": "Invalid request"},
+        502: {"description": "SharePoint communication error"},
+        500: {"description": "Internal processing error"},
+    },
+)
+async def extract_text(request: ExtractTextRequest) -> JSONResponse:
+    """Download a Word document from SharePoint and return its plain text."""
+    local_path = ""
+
+    try:
+        # 1. Download from SharePoint
+        logger.info(f"Downloading document for text extraction: {request.document_url}")
+        try:
+            local_path = await graph_client.download_file(request.document_url)
+        except GraphClientError as e:
+            logger.error(f"SharePoint download failed: {e}")
+            raise HTTPException(
+                status_code=502,
+                detail=f"Failed to download document from SharePoint: {e}",
+            )
+
+        # 2. Extract text
+        try:
+            doc = Document(local_path)
+        except Exception as e:
+            logger.error(f"Failed to open document: {e}")
+            raise HTTPException(status_code=400, detail=f"Failed to open Word document: {e}")
+
+        paragraphs = [p.text for p in doc.paragraphs if p.text.strip()]
+        text = "\n".join(paragraphs)
+
+        # Resolve filename
+        if graph_client.is_sharing_link(request.document_url):
+            resolved = await graph_client.resolve_sharing_link(request.document_url)
+            filename = resolved["filename"]
+        else:
+            parsed = graph_client.parse_sharepoint_url(request.document_url)
+            filename = parsed["filename"]
+
+        response = ExtractTextResponse(
+            status="success",
+            filename=filename,
+            text=text,
+            page_count=max(1, len(paragraphs) // 25),
+        )
+        return JSONResponse(content=response.model_dump(by_alias=True, mode="json"))
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.exception(f"Unexpected error during text extraction: {e}")
+        raise HTTPException(status_code=500, detail=f"Internal error: {e}")
+
+    finally:
+        if local_path:
+            graph_client.cleanup_temp_file(local_path)

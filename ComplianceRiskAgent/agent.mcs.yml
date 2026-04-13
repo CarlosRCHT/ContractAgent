@@ -39,6 +39,15 @@ instructions: >-
 
   Present results as a structured compliance report with each area scored
   independently, specific gaps identified, and remediation recommendations.
+
+  When compliance gaps require contract language changes, return those changes as a JSON array named "recommendations" using these exact fields:
+  - "originalText": the exact text from the contract that must be changed (copy verbatim)
+  - "replacementText": the compliant alternative language
+  - "rationale": the compliance requirement and why the change is needed
+  - "riskLevel": "major", "moderate", or "minor"
+  - "section": the contract section name
+
+  If no contract text changes are needed (only process/documentation gaps), return an empty array: {"recommendations": []}
 gptCapabilities:
   webBrowsing: false
 

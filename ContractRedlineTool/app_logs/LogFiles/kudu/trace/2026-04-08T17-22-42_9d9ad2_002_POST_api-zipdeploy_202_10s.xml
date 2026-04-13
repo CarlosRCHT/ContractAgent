@@ -1,0 +1,17 @@
+<step title="Incoming Request" date="2026-04-08T17:22:42.270" instance="9d9ad2" url="/api/zipdeploy?isAsync=true" method="POST" type="request" pid="772,1,7" Accept="*/*" Host="contract-redline-app.scm.azurewebsites.net" User-Agent="AZURECLI/2.77.0 (MSI)" Accept-Encoding="gzip, deflate" Authorization="Bea..." Cache-Control="no-cache" Content-Type="application/octet-stream" Content-Length="66720" x-ms-client-request-id="5dceeb2b-336f-11f1-a947-6ca100074de9" x-ms-artifact-checksum="41507dec77d705334c20e212aa1e9094eaf622d310c91c8630da63b87a79567c" X-ARR-LOG-ID="5dceeb2b-336f-11f1-a947-6ca100074de9" CLIENT-IP="172.172.34.115:26648" X-SITE-DEPLOYMENT-ID="contract-redline-app" WAS-DEFAULT-HOSTNAME="contract-redline-app.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/zipdeploy?isAsync=true" X-Client-IP="172.172.34.115" X-Client-Port="26648" >
+  <step title="ZipPushDeploy" date="2026-04-08T17:22:47.378" >
+    <step title="ZipDeploy. Extract zip. Remote build." date="2026-04-08T17:22:47.463" /><!-- duration: 9ms -->
+    <step title="None repository commit" date="2026-04-08T17:22:47.557" >
+      <step title="Commit id: f60d6f17-c6fa-4637-aa24-667fc4db5b72" date="2026-04-08T17:22:47.586" Message="N/A" AuthorName="N/A" AuthorEmail="N/A" /><!-- duration: 10ms -->
+    </step><!-- duration: 104ms -->
+    <step title="Starting PushDeployAsync" date="2026-04-08T17:22:47.672" /><!-- duration: 49ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/4e5cd08e-4bf1-4ed1-b7a5-3a46c94d9334.zip" date="2026-04-08T17:22:48.072" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/4e5cd08e-4bf1-4ed1-b7a5-3a46c94d9334.zip" date="2026-04-08T17:22:48.094" /><!-- duration: 17ms -->
+    </step><!-- duration: 544ms -->
+    <step title="Start deployment in the background" date="2026-04-08T17:22:48.968" >
+      <step title="Acquiring Deployment Lock" date="2026-04-08T17:22:49.250" /><!-- duration: 50ms -->
+      <step title="Acquired Deployment Lock" date="2026-04-08T17:22:50.697" /><!-- duration: 57ms -->
+    </step><!-- duration: 3259ms -->
+  </step><!-- duration: 4890ms -->
+  <step title="Outgoing response" date="2026-04-08T17:22:52.507" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 47ms -->
+</step><!-- duration: 10304ms -->

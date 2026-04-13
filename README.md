@@ -4,61 +4,36 @@ A multi-agent contract lifecycle management system built on Microsoft Copilot St
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                          User / Teams                               │
-└──────────────────────────────┬──────────────────────────────────────┘
-                               │
-                               ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│              Contract Management Orchestrator                        │
-│              (ContractAgent — Hub)                                    │
-│                                                                      │
-│   Knowledge Sources (SharePoint):                                    │
-│   • Corporate Procurement Policy   • Legal Review Playbook           │
-│   • Compliance Checklist           • Contract Templates              │
-├──────────┬──────────┬──────────┬──────────┬──────────────────────────┤
-│          │          │          │          │                           │
-▼          ▼          ▼          ▼          ▼                           │
-┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌──────────────────┐      │
-│Intake  │ │Legal   │ │Compli- │ │Report- │ │Portfolio         │      │
-│Agent   │ │Review  │ │ance    │ │ing     │ │Intelligence      │      │
-│        │ │Agent   │ │Risk    │ │Agent   │ │Agent             │      │
-│        │ │        │ │Agent   │ │        │ │                  │      │
-└────────┘ └────────┘ └────────┘ └────────┘ └────────┬─────────┘      │
-                                                     │                 │
-                                                     ▼                 │
-                                              ┌─────────────┐         │
-                                              │ Fabric Data  │         │
-                                              │ Agent /      │         │
-                                              │ Lakehouse    │         │
-                                              └─────────────┘         │
-└──────────────────────────────────────────────────────────────────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │ Contract Redline    │
-                    │ Tool (FastAPI)      │
-                    │ Azure App Service   │
-                    └─────────────────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │ SharePoint          │
-                    │ (Source & Output)    │
-                    └─────────────────────┘
+```mermaid
+graph TD
+    User["User / Teams"]
+
+    subgraph Orchestrator["Contract Management Orchestrator (ContractAgent — Hub)"]
+        direction TB
+        KS["Knowledge Sources (SharePoint):<br/>Corporate Procurement Policy · Legal Review Playbook<br/>Compliance Checklist · Contract Templates"]
+        Intake["Intake Agent"]
+        Legal["Legal Review Agent"]
+        Compliance["Compliance Risk Agent"]
+        Reporting["Reporting Agent"]
+        Portfolio["Portfolio Intelligence Agent"]
+    end
+
+    User --> Orchestrator
+    Portfolio --> Fabric["Fabric Data Agent /<br/>Lakehouse"]
+    Orchestrator --> Redline["Contract Redline Tool<br/>(FastAPI)<br/>Azure App Service"]
+    Redline --> SharePoint["SharePoint<br/>(Source & Output)"]
 ```
 
 ### Review Pipeline
 
-```
-User submits contract
-  → Intake Agent: classify type & urgency
-    → Legal Review Agent: clause-by-clause playbook review
-    → Compliance Risk Agent: tax, insurance, cyber, regulatory checks
-      → Portfolio Intelligence Agent: benchmark against historical portfolio
-        → Reporting Agent: executive summary with recommendations
-          → Contract Redline Tool: apply tracked changes to Word document
+```mermaid
+graph LR
+    Submit["User submits contract"] --> Intake["Intake Agent:<br/>classify type & urgency"]
+    Intake --> Legal["Legal Review Agent:<br/>clause-by-clause<br/>playbook review"]
+    Legal --> Compliance["Compliance Risk Agent:<br/>tax, insurance, cyber,<br/>regulatory checks"]
+    Compliance --> Portfolio["Portfolio Intelligence Agent:<br/>benchmark against<br/>historical portfolio"]
+    Portfolio --> Reporting["Reporting Agent:<br/>executive summary with<br/>recommendations"]
+    Reporting --> Redline["Contract Redline Tool:<br/>apply tracked changes<br/>to Word document"]
 ```
 
 ## Repository Structure
@@ -166,13 +141,13 @@ A Python FastAPI microservice that applies tracked changes to Word documents sto
 
 ### How It Works
 
-```
-POST /api/redline
-  → Download .docx from SharePoint (Graph API)
-  → Apply tracked changes via OpenXML (w:del / w:ins elements)
-  → Add Word comments with risk-rated rationale (🔴 Major, 🟡 Moderate, 🟢 Minor)
-  → Upload redlined .docx back to SharePoint
-  → Return results with SharePoint URL
+```mermaid
+graph TD
+    A["POST /api/redline"] --> B["Download .docx from SharePoint<br/>(Graph API)"]
+    B --> C["Apply tracked changes via OpenXML<br/>(w:del / w:ins elements)"]
+    C --> D["Add Word comments with risk-rated rationale<br/>(🔴 Major, 🟡 Moderate, 🟢 Minor)"]
+    D --> E["Upload redlined .docx<br/>back to SharePoint"]
+    E --> F["Return results with<br/>SharePoint URL"]
 ```
 
 ### API Reference
@@ -348,11 +323,11 @@ The Portfolio Intelligence Agent queries a Microsoft Fabric lakehouse. Sample da
 
 | Table | Rows | Description |
 |---|---|---|
-| `contracts` | 50 | Master contract records (type, value, status, expiration, payment terms, risk rating) |
-| `contract_clauses` | 227 | Clause-level detail (clause type, compliance, deviation type, risk score) |
+| `contracts` | 54 | Master contract records (type, value, status, expiration, payment terms, risk rating) |
+| `contract_clauses` | 288 | Clause-level detail (clause type, compliance, deviation type, risk score) |
 | `vendors` | 20 | Vendor master (tier, compliance score, country, active contracts) |
-| `compliance_incidents` | 30 | Historical incidents (type, severity, financial impact) |
-| `spend_actuals` | 181 | Budget vs. actual spend by quarter (variance, department, category) |
+| `compliance_incidents` | 34 | Historical incidents (type, severity, financial impact) |
+| `spend_actuals` | 195 | Budget vs. actual spend by quarter (variance, department, category) |
 
 **Relationships:** `contracts.vendor_id` → `vendors.vendor_id`; `contracts.contract_id` → `contract_clauses`, `compliance_incidents`, `spend_actuals`.
 

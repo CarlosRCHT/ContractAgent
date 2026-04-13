@@ -166,11 +166,11 @@ for table_name in csv_files:
 
 | Table | Rows | Key Columns | Relationships |
 |-------|------|-------------|---------------|
-| `contracts` | 50 | `contract_id` (PK), `vendor_id` (FK→vendors), `contract_type`, `total_value`, `status`, `expiration_date` | Master contract records |
-| `contract_clauses` | 227 | `clause_id` (PK), `contract_id` (FK→contracts), `clause_type`, `risk_score`, `deviation_type`, `standard_compliant` | Clause-level detail per contract |
+| `contracts` | 54 | `contract_id` (PK), `vendor_id` (FK→vendors), `contract_type`, `total_value`, `status`, `expiration_date` | Master contract records |
+| `contract_clauses` | 288 | `clause_id` (PK), `contract_id` (FK→contracts), `clause_type`, `risk_score`, `deviation_type`, `standard_compliant` | Clause-level detail per contract |
 | `vendors` | 20 | `vendor_id` (PK), `vendor_name`, `vendor_type` (tier), `compliance_score`, `country` | Vendor master data |
-| `compliance_incidents` | 30 | `incident_id` (PK), `contract_id` (FK→contracts), `vendor_id` (FK→vendors), `severity`, `incident_type` | Historical compliance issues |
-| `spend_actuals` | 181 | `record_id` (PK), `contract_id` (FK→contracts), `vendor_id` (FK→vendors), `fiscal_year`, `budgeted_amount`, `actual_amount`, `variance_pct` | Budget vs. actual spend by period |
+| `compliance_incidents` | 34 | `incident_id` (PK), `contract_id` (FK→contracts), `vendor_id` (FK→vendors), `severity`, `incident_type` | Historical compliance issues |
+| `spend_actuals` | 195 | `record_id` (PK), `contract_id` (FK→contracts), `vendor_id` (FK→vendors), `fiscal_year`, `budgeted_amount`, `actual_amount`, `variance_pct` | Budget vs. actual spend by period |
 
 ### Step 3: Create the Fabric Data Agent
 
@@ -186,15 +186,29 @@ Select **Data agent instructions** and add:
 ```
 This data source contains Contoso's enterprise contract portfolio data across five tables:
 
-- contracts: Master contract records with 50 contracts across types (SOW, NDA, MSA, SLA, Vendor Agreement). Key fields: contract_id, vendor_id, contract_type, total_value, annual_value, status, effective_date, expiration_date, payment_terms_days, auto_renewal, risk_rating, department.
+- contracts: Master contract records with 54 contracts. Key fields: contract_id, vendor_id, contract_type, total_value, annual_value, status, effective_date, expiration_date, payment_terms_days, auto_renewal, risk_rating, department.
 
-- contract_clauses: 227 clause-level records linked to contracts. Key fields: contract_id, clause_type, standard_compliant (boolean), deviation_type (Major/Moderate/Minor/None), risk_score (1-10), review_status, recommendation.
+- contract_clauses: 288 clause-level records linked to contracts. Key fields: contract_id, clause_type, standard_compliant (boolean), deviation_type (Major/Moderate/Minor/None), risk_score (1-10), review_status, recommendation.
 
 - vendors: 20 vendor records with tier classification. Key fields: vendor_id, vendor_name, vendor_type (Strategic/Preferred/Standard/Probationary), compliance_score (0-100), country, total_contract_value, active_contracts_count.
 
-- compliance_incidents: 30 historical compliance incidents. Key fields: contract_id, vendor_id, incident_type, severity (High/Medium/Low), detected_date, resolved_date, financial_impact.
+- compliance_incidents: 34 historical compliance incidents. Key fields: contract_id, vendor_id, incident_type, severity (High/Medium/Low), detected_date, resolved_date, financial_impact.
 
-- spend_actuals: 181 quarterly spend records. Key fields: contract_id, vendor_id, fiscal_year, fiscal_quarter, budgeted_amount, actual_amount, variance_pct, spend_category, department.
+- spend_actuals: 195 quarterly spend records. Key fields: contract_id, vendor_id, fiscal_year, fiscal_quarter, budgeted_amount, actual_amount, variance_pct, spend_category, department.
+
+IMPORTANT — EXACT VALUES FOR contract_type column (use these exactly in SQL WHERE clauses, never abbreviations or synonyms):
+- "Consulting Agreement" (9 contracts)
+- "Software License" (8 contracts)
+- "Supply Agreement" (8 contracts)
+- "Staffing Agreement" (7 contracts)
+- "Maintenance Agreement" (6 contracts)
+- "Professional Services" (6 contracts)
+- "Master Service Agreement" (4 contracts)
+- "Statement of Work" (3 contracts)
+- "Lease Agreement" (2 contracts)
+- "Vendor Services Agreement" (1 contract)
+
+Common synonyms to map: "VSA" or "Vendor Agreement" or "Vendor Service Agreement" → use "Vendor Services Agreement". "SOW" → use "Statement of Work". "MSA" → use "Master Service Agreement".
 
 Use contracts.vendor_id to join with vendors.vendor_id. Use contracts.contract_id to join with contract_clauses, compliance_incidents, and spend_actuals.
 

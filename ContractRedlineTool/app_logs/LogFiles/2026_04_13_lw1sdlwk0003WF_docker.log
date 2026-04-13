@@ -1,0 +1,108 @@
+2026-04-13T15:47:59.3140063Z State: Starting, Action: EstablishingSiteNetworks, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-04-13T15:48:06.8932057Z State: Starting, Action: StartingMsiContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-04-13T15:48:30.4154645Z State: Starting, Action: StartingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-04-13T15:48:30.4331756Z Container start method called.
+2026-04-13T15:48:30.4345368Z State: Starting, Action: PullingImage, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pulling image 10.1.0.5:13209/appsvc/python:3.11_20260203.2.tuxprod for contract-redline-app., DetailsLevel: INFO
+2026-04-13T15:48:30.4347429Z Establishing network.
+2026-04-13T15:48:30.4348927Z Pulling image: appsvc/python:3.11_20260203.2.tuxprod.
+2026-04-13T15:48:31.8472291Z Container is starting.
+2026-04-13T15:48:31.8475750Z State: Starting, Action: MountingVolumes, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Mounting volumes for contract-redline-app., DetailsLevel: INFO
+2026-04-13T15:48:31.8561426Z Establishing user namespace if not established already.
+2026-04-13T15:48:31.8567523Z Establishing network if not established already.
+2026-04-13T15:48:31.8653338Z Mounting volumes.
+2026-04-13T15:48:31.9210306Z Nested mountpoint 
+2026-04-13T15:48:32.0796740Z Nested mountpoint volatile/logs
+2026-04-13T15:48:32.1506145Z Nested mountpoint 
+2026-04-13T15:48:32.5295723Z Nested mountpoint 
+2026-04-13T15:48:32.7476375Z Nested mountpoint 
+2026-04-13T15:48:35.7273303Z State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Finished pulling container image and mounting volumes for contract-redline-app. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-04-13T15:48:35.7564706Z Creating container.
+2026-04-13T15:48:35.8116267Z Creating pipes for streaming container io.
+2026-04-13T15:48:35.8208100Z Creating stdout named pipe at /podr/container/pipe/6cab182a8ccf_contract-redline-app/stdout_c81ad16bbc304c1398a63fce4055cc6c.
+2026-04-13T15:48:35.8393702Z Successfully created stdout named pipe at: /podr/container/pipe/6cab182a8ccf_contract-redline-app/stdout_c81ad16bbc304c1398a63fce4055cc6c.
+2026-04-13T15:48:35.8404317Z Opening named pipe /podr/container/pipe/6cab182a8ccf_contract-redline-app/stdout_c81ad16bbc304c1398a63fce4055cc6c for reading in non-blocking mode.
+2026-04-13T15:48:35.8568210Z Successfully opened named pipe: /podr/container/pipe/6cab182a8ccf_contract-redline-app/stdout_c81ad16bbc304c1398a63fce4055cc6c.
+2026-04-13T15:48:35.8582233Z Successfully removed non-blocking flag from /podr/container/pipe/6cab182a8ccf_contract-redline-app/stdout_c81ad16bbc304c1398a63fce4055cc6c.
+2026-04-13T15:48:35.9220795Z Creating stderr named pipe at /podr/container/pipe/6cab182a8ccf_contract-redline-app/stderr_7a094fb7a61b4edda5353f06ff73c6d9.
+2026-04-13T15:48:35.9338605Z Successfully created stderr named pipe at: /podr/container/pipe/6cab182a8ccf_contract-redline-app/stderr_7a094fb7a61b4edda5353f06ff73c6d9.
+2026-04-13T15:48:35.9441871Z Opening named pipe /podr/container/pipe/6cab182a8ccf_contract-redline-app/stderr_7a094fb7a61b4edda5353f06ff73c6d9 for reading in non-blocking mode.
+2026-04-13T15:48:35.9580914Z Successfully opened named pipe: /podr/container/pipe/6cab182a8ccf_contract-redline-app/stderr_7a094fb7a61b4edda5353f06ff73c6d9.
+2026-04-13T15:48:35.9605814Z Successfully removed non-blocking flag from /podr/container/pipe/6cab182a8ccf_contract-redline-app/stderr_7a094fb7a61b4edda5353f06ff73c6d9.
+2026-04-13T15:48:36.0164948Z Creating container with image: appsvc/python:3.11_20260203.2.tuxprod from registry: 10.1.0.5:13209 and fully qualified image name: 10.1.0.5:13209/appsvc/python:3.11_20260203.2.tuxprod
+2026-04-13T15:48:39.9252711Z Starting container: 6cab182a8ccf_contract-redline-app.
+2026-04-13T15:48:40.1597646Z Starting watchers and probes.
+2026-04-13T15:48:40.1678966Z Starting metrics collection.
+2026-04-13T15:48:40.1769413Z Container is running.
+2026-04-13T15:48:40.1770844Z State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container contract-redline-app successfully created and is running., DetailsLevel: INFO
+2026-04-13T15:48:40.7386762Z Container start method finished after 10305 ms.
+2026-04-13T15:48:40.7389230Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container contract-redline-app successfully created and is running., DetailsLevel: INFO
+2026-04-13T15:48:40.7861238Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-04-13T15:50:23.9321652Z Site startup probe succeeded after 102.99708 seconds.
+2026-04-13T15:50:24.2506884Z State: Starting, Action: WarmUpProbeSucceeded, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site startup probe succeeded after 102.99708 seconds., DetailsLevel: INFO
+2026-04-13T15:50:25.3629339Z Site is running with deployment version: 835a1c04-cc7c-4b29-b61d-14754b82f373
+2026-04-13T15:50:25.3657667Z Site started.
+2026-04-13T15:50:25.3713603Z State: Started, Action: None, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 04/13/2026 15:50:25 (UTC), DetailsLevel: INFO
+2026-04-13T15:50:25.3745753Z Site is running with patch version PYTHON 3.11.14
+2026-04-13T15:50:45.4783178Z State: Stopping, Action: StoppingSite, LastError: VNETFailure, LastErrorTimestamp: 04/08/2026 19:14:08, LastErrorDetails: There was an issue setting up VNet., Details: Site started at 04/08/2026 19:33:38 (UTC), DetailsLevel: INFO
+2026-04-13T15:50:45.4957980Z State: Stopping, Action: StoppingSiteContainers, LastError: VNETFailure, LastErrorTimestamp: 04/08/2026 19:14:08, LastErrorDetails: There was an issue setting up VNet., Details: Site started at 04/08/2026 19:33:38 (UTC), DetailsLevel: INFO
+2026-04-13T15:50:45.4968703Z Container is terminating. Grace period: 5 seconds.
+2026-04-13T15:50:45.5541109Z Stop and delete container. Retry count = 0
+2026-04-13T15:50:45.5545136Z Stopping container: 85bf0149f4b2_contract-redline-app.
+2026-04-13T15:50:50.8299320Z Deleting container: 85bf0149f4b2_contract-redline-app. Retry count = 0
+2026-04-13T15:51:04.5076167Z Container spec TerminationMessagePolicy  path 
+2026-04-13T15:51:04.5157053Z Container is terminated. Total time elapsed: 19017 ms.
+2026-04-13T15:51:04.5170462Z Site: contract-redline-app stopped.
+2026-04-13T21:29:00.5448137Z State: Starting, Action: EstablishingSiteNetworks, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-04-13T21:29:08.1244052Z State: Starting, Action: StartingMsiContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-04-13T21:29:33.6470289Z State: Starting, Action: StartingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-04-13T21:29:33.6653525Z Container start method called.
+2026-04-13T21:29:33.6663650Z State: Starting, Action: PullingImage, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pulling image 10.1.0.4:13209/appsvc/python:3.11_20260203.2.tuxprod for contract-redline-app., DetailsLevel: INFO
+2026-04-13T21:29:33.6689705Z Establishing network.
+2026-04-13T21:29:33.6863539Z Pulling image: appsvc/python:3.11_20260203.2.tuxprod.
+2026-04-13T21:29:36.1452023Z Container is starting.
+2026-04-13T21:29:36.1454409Z State: Starting, Action: MountingVolumes, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Mounting volumes for contract-redline-app., DetailsLevel: INFO
+2026-04-13T21:29:36.1472145Z Establishing user namespace if not established already.
+2026-04-13T21:29:36.1542464Z Establishing network if not established already.
+2026-04-13T21:29:36.1555617Z Mounting volumes.
+2026-04-13T21:29:36.1664527Z Nested mountpoint 
+2026-04-13T21:29:36.4125013Z Nested mountpoint volatile/logs
+2026-04-13T21:29:36.5032853Z Nested mountpoint 
+2026-04-13T21:29:36.6857202Z Nested mountpoint 
+2026-04-13T21:29:36.8296823Z Nested mountpoint 
+2026-04-13T21:29:42.0558536Z State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Finished pulling container image and mounting volumes for contract-redline-app. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-04-13T21:29:42.0560963Z Creating container.
+2026-04-13T21:29:42.1221969Z Creating pipes for streaming container io.
+2026-04-13T21:29:42.1504012Z Creating stdout named pipe at /podr/container/pipe/2e16468043c2_contract-redline-app/stdout_7886574957ab4ab58789d5ac94a5a39b.
+2026-04-13T21:29:42.1857675Z Successfully created stdout named pipe at: /podr/container/pipe/2e16468043c2_contract-redline-app/stdout_7886574957ab4ab58789d5ac94a5a39b.
+2026-04-13T21:29:42.1870230Z Opening named pipe /podr/container/pipe/2e16468043c2_contract-redline-app/stdout_7886574957ab4ab58789d5ac94a5a39b for reading in non-blocking mode.
+2026-04-13T21:29:42.2061073Z Successfully opened named pipe: /podr/container/pipe/2e16468043c2_contract-redline-app/stdout_7886574957ab4ab58789d5ac94a5a39b.
+2026-04-13T21:29:42.2067729Z Successfully removed non-blocking flag from /podr/container/pipe/2e16468043c2_contract-redline-app/stdout_7886574957ab4ab58789d5ac94a5a39b.
+2026-04-13T21:29:42.2235757Z Creating stderr named pipe at /podr/container/pipe/2e16468043c2_contract-redline-app/stderr_79a9d0e34b6d4d1098d67731cba0d8d7.
+2026-04-13T21:29:42.2246341Z Successfully created stderr named pipe at: /podr/container/pipe/2e16468043c2_contract-redline-app/stderr_79a9d0e34b6d4d1098d67731cba0d8d7.
+2026-04-13T21:29:42.2247635Z Opening named pipe /podr/container/pipe/2e16468043c2_contract-redline-app/stderr_79a9d0e34b6d4d1098d67731cba0d8d7 for reading in non-blocking mode.
+2026-04-13T21:29:42.2248859Z Successfully opened named pipe: /podr/container/pipe/2e16468043c2_contract-redline-app/stderr_79a9d0e34b6d4d1098d67731cba0d8d7.
+2026-04-13T21:29:42.2249750Z Successfully removed non-blocking flag from /podr/container/pipe/2e16468043c2_contract-redline-app/stderr_79a9d0e34b6d4d1098d67731cba0d8d7.
+2026-04-13T21:29:42.2544163Z Creating container with image: appsvc/python:3.11_20260203.2.tuxprod from registry: 10.1.0.4:13209 and fully qualified image name: 10.1.0.4:13209/appsvc/python:3.11_20260203.2.tuxprod
+2026-04-13T21:29:43.8901124Z Starting container: 2e16468043c2_contract-redline-app.
+2026-04-13T21:29:44.1610427Z Starting watchers and probes.
+2026-04-13T21:29:44.1801737Z Starting metrics collection.
+2026-04-13T21:29:44.1813903Z Container is running.
+2026-04-13T21:29:44.1815076Z State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container contract-redline-app successfully created and is running., DetailsLevel: INFO
+2026-04-13T21:29:44.6046651Z Container start method finished after 10937 ms.
+2026-04-13T21:29:44.6048996Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container contract-redline-app successfully created and is running., DetailsLevel: INFO
+2026-04-13T21:29:44.6512610Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-04-13T21:32:38.1749194Z Site startup probe succeeded after 173.3587988 seconds.
+2026-04-13T21:32:39.8116344Z State: Starting, Action: WarmUpProbeSucceeded, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site startup probe succeeded after 173.3587988 seconds., DetailsLevel: INFO
+2026-04-13T21:32:44.1147967Z Site is running with deployment version: 2296f26d-e8a2-464d-bb26-de64fbefe1fa
+2026-04-13T21:32:44.2775702Z Site started.
+2026-04-13T21:32:44.2798522Z State: Started, Action: None, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 04/13/2026 21:32:44 (UTC), DetailsLevel: INFO
+2026-04-13T21:32:44.2993205Z Site is running with patch version PYTHON 3.11.14
+2026-04-13T21:33:04.9048650Z State: Stopping, Action: StoppingSite, LastError: VNETFailure, LastErrorTimestamp: 04/08/2026 19:14:08, LastErrorDetails: There was an issue setting up VNet., Details: Site started at 04/13/2026 15:50:25 (UTC), DetailsLevel: INFO
+2026-04-13T21:33:04.9096589Z State: Stopping, Action: StoppingSiteContainers, LastError: VNETFailure, LastErrorTimestamp: 04/08/2026 19:14:08, LastErrorDetails: There was an issue setting up VNet., Details: Site started at 04/13/2026 15:50:25 (UTC), DetailsLevel: INFO
+2026-04-13T21:33:04.9157896Z Container is terminating. Grace period: 5 seconds.
+2026-04-13T21:33:04.9773255Z Stop and delete container. Retry count = 0
+2026-04-13T21:33:04.9814771Z Stopping container: 6cab182a8ccf_contract-redline-app.
+2026-04-13T21:33:11.0282680Z Deleting container: 6cab182a8ccf_contract-redline-app. Retry count = 0
+2026-04-13T21:33:22.3581537Z Container spec TerminationMessagePolicy  path 
+2026-04-13T21:33:22.3678873Z Container is terminated. Total time elapsed: 17449 ms.
+2026-04-13T21:33:22.3764289Z Site: contract-redline-app stopped.
