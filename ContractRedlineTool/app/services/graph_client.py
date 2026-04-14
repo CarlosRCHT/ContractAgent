@@ -116,6 +116,12 @@ class GraphClient:
         library_name = path_parts[0] if path_parts else "Shared Documents"
         item_path = "/" + path_parts[1] if len(path_parts) > 1 else "/"
 
+        logger.info(
+            f"Parsed SharePoint URL: site_path={site_path}, "
+            f"library_name={library_name}, item_path={item_path}, "
+            f"filename={os.path.basename(file_path)}"
+        )
+
         return {
             "hostname": hostname,
             "site_path": site_path,
@@ -160,6 +166,9 @@ class GraphClient:
                         f"Failed to list drives: {resp.status_code} - {resp.text}"
                     )
                 drives = resp.json().get("value", [])
+                logger.info(
+                    f"Available drives: {[(d.get('name',''), d.get('id','')[:20]) for d in drives]}"
+                )
                 drive_id = None
                 for drive in drives:
                     if drive.get("name", "").lower() == library_name.lower():
@@ -210,6 +219,7 @@ class GraphClient:
                 f"/root:{parsed['item_path']}:/content"
             )
             filename = parsed["filename"]
+            logger.info(f"Download URL: {download_url}")
 
         async with httpx.AsyncClient(follow_redirects=True) as client:
             resp = await client.get(download_url, headers=headers)

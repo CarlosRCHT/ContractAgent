@@ -1,4 +1,6 @@
-from pydantic import BaseModel, ConfigDict, Field
+import json
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from enum import Enum
 
 
@@ -72,6 +74,24 @@ class RedlineRequest(BaseModel):
         default="",
         description="Optional SharePoint folder URL for the redlined document. If empty, uploads to the same folder as the source document.",
     )
+
+    @field_validator("recommendations", mode="before")
+    @classmethod
+    def parse_recommendations_json(cls, v):
+        """Accept recommendations as either a JSON string or a parsed list.
+
+        Copilot Studio custom connectors cannot reliably marshal arrays of
+        complex objects, so the Swagger spec declares recommendations as a
+        string.  This validator transparently deserializes when needed.
+        """
+        if isinstance(v, str):
+            try:
+                v = json.loads(v)
+            except json.JSONDecodeError:
+                raise ValueError("recommendations must be a valid JSON array string")
+        if not isinstance(v, list):
+            raise ValueError("recommendations must be a list")
+        return v
 
 
 class ChangeResult(BaseModel):

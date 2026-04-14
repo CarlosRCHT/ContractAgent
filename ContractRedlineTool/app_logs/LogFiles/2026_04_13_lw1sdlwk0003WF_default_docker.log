@@ -108,3 +108,58 @@
 2026-04-13T21:38:52.6962944Z SharePoint download failed: Failed to download file: 404 - {"error":{"code":"itemNotFound","message":"The resource could not be found."}}
 2026-04-13T21:38:53.8093579Z SharePoint download failed: Failed to download file: 404 - {"error":{"code":"itemNotFound","message":"The resource could not be found."}}
 2026-04-13T21:38:54.9670401Z SharePoint download failed: Failed to download file: 404 - {"error":{"code":"itemNotFound","message":"The resource could not be found."}}
+2026-04-13T21:53:45.1088631Z    _____                               
+2026-04-13T21:53:45.1737941Z   /  _  \ __________ _________   ____  
+2026-04-13T21:53:45.1738284Z  /  /_\  \\___   /  |  \_  __ \_/ __ \ 
+2026-04-13T21:53:45.1738359Z /    |    \/    /|  |  /|  | \/\  ___/ 
+2026-04-13T21:53:45.1738426Z \____|__  /_____ \____/ |__|    \___  >
+2026-04-13T21:53:45.1738554Z         \/      \/                  \/ 
+2026-04-13T21:53:45.1738626Z A P P   S E R V I C E   O N   L I N U X
+2026-04-13T21:53:45.1738682Z 
+2026-04-13T21:53:45.1738767Z Documentation    : http://aka.ms/webapp-linux
+2026-04-13T21:53:45.1738829Z Python quickstart: https://aka.ms/python-qs
+2026-04-13T21:53:45.1738891Z Python version   : 3.11.14
+2026-04-13T21:53:45.1738948Z Instance Name    : lw1sdlwk0003WF
+2026-04-13T21:53:45.1739040Z Instance Id      : 9d9ad26f55314832f40453d107bc280606f9336225ee3827727ea25821b4efdd
+2026-04-13T21:53:45.1739099Z 
+2026-04-13T21:53:45.1739154Z Note: Any data outside '/home' is not persisted
+2026-04-13T21:53:47.1576064Z Starting OpenBSD Secure Shell server: sshd.
+2026-04-13T21:53:47.2238474Z WEBSITES_INCLUDE_CLOUD_CERTS is not set to true.
+2026-04-13T21:53:47.4896132Z Updating certificates in /etc/ssl/certs...
+2026-04-13T21:54:32.4672459Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_RSA_Root_CA_2022.pem
+2026-04-13T21:54:32.5045737Z rehash: warning: skipping duplicate certificate in azl_Sectigo_Public_Server_Authentication_Root_R46.pem
+2026-04-13T21:54:32.5915550Z rehash: warning: skipping duplicate certificate in azl_Sectigo_Public_Server_Authentication_Root_E46.pem
+2026-04-13T21:54:32.7174669Z rehash: warning: skipping duplicate certificate in azl_SSL.com_TLS_ECC_Root_CA_2022.pem
+2026-04-13T21:54:32.8550500Z 4 added, 0 removed; done.
+2026-04-13T21:54:32.8842194Z Running hooks in /etc/ca-certificates/update.d...
+2026-04-13T21:54:32.9419508Z done.
+2026-04-13T21:54:32.9789454Z CA certificates copied and updated successfully.
+2026-04-13T21:54:33.3762472Z Site's appCommandLine: gunicorn app.main:app --worker-class uvicorn.workers.UvicornWorker --workers 2 --bind 0.0.0.0:8000 --timeout 120
+2026-04-13T21:54:35.0028611Z Starting periodic command scheduler: cron.
+2026-04-13T21:54:35.0218165Z Launching oryx with: create-script -appPath /home/site/wwwroot -output /opt/startup/startup.sh -virtualEnvName antenv -defaultApp /opt/defaultsite -userStartupCommand 'gunicorn app.main:app --worker-class uvicorn.workers.UvicornWorker --workers 2 --bind 0.0.0.0:8000 --timeout 120'
+2026-04-13T21:54:36.2066765Z Found build manifest file at '/home/site/wwwroot/oryx-manifest.toml'. Deserializing it...
+2026-04-13T21:54:36.2330839Z Build Operation ID: 31c23d9bc6b0ab5b
+2026-04-13T21:54:36.2632401Z Oryx Version: 0.2.20260130.1, Commit: a98e9aef5dfb6572a08b0a07ce414e1122ab4a2e, ReleaseTagName: 20260130.1
+2026-04-13T21:54:36.2704872Z Output is compressed. Extracting it...
+2026-04-13T21:54:36.2918099Z Found zstd-compressed tarball.
+2026-04-13T21:54:36.3075487Z Extracting '/home/site/wwwroot/output.tar.zst' to directory '/tmp/8de99a67bff1af4'...
+2026-04-13T21:54:36.3076246Z Using zstd for decompression of file: /home/site/wwwroot/output.tar.zst
+2026-04-13T21:54:43.7856778Z SharePoint download failed: Failed to download file: 404 - {"error":{"code":"itemNotFound","message":"The resource could not be found."}}
+2026-04-13T21:54:46.1045018Z SharePoint download failed: Failed to download file: 404 - {"error":{"code":"itemNotFound","message":"The resource could not be found."}}
+2026-04-13T21:54:47.9524326Z SharePoint download failed: Failed to download file: 404 - {"error":{"code":"itemNotFound","message":"The resource could not be found."}}
+2026-04-13T21:55:30.7590503Z zstd tar Successfully extracted '/home/site/wwwroot/output.tar.zst' to '/tmp/8de99a67bff1af4'
+2026-04-13T21:55:30.7653190Z App path is set to '/tmp/8de99a67bff1af4'
+2026-04-13T21:55:30.9047485Z Writing output script to '/opt/startup/startup.sh'
+2026-04-13T21:55:31.1699497Z Using packages from virtual environment antenv located at /tmp/8de99a67bff1af4/antenv.
+2026-04-13T21:55:31.1700921Z Updated PYTHONPATH to '/opt/startup/app_logs:/tmp/8de99a67bff1af4/antenv/lib/python3.11/site-packages'
+2026-04-13T21:55:32.2542419Z [2026-04-13 21:55:32 +0000] [1909] [INFO] Starting gunicorn 22.0.0
+2026-04-13T21:55:32.2676913Z [2026-04-13 21:55:32 +0000] [1909] [INFO] Listening at: http://0.0.0.0:8000 (1909)
+2026-04-13T21:55:32.2697055Z [2026-04-13 21:55:32 +0000] [1909] [INFO] Using worker: uvicorn.workers.UvicornWorker
+2026-04-13T21:55:32.2940298Z [2026-04-13 21:55:32 +0000] [1910] [INFO] Booting worker with pid: 1910
+2026-04-13T21:55:32.3546260Z [2026-04-13 21:55:32 +0000] [1911] [INFO] Booting worker with pid: 1911
+2026-04-13T21:55:41.7713895Z [2026-04-13 21:55:41 +0000] [1910] [INFO] Started server process [1910]
+2026-04-13T21:55:41.7735131Z [2026-04-13 21:55:41 +0000] [1910] [INFO] Waiting for application startup.
+2026-04-13T21:55:41.7816231Z [2026-04-13 21:55:41 +0000] [1910] [INFO] Application startup complete.
+2026-04-13T21:55:41.7906156Z [2026-04-13 21:55:41 +0000] [1911] [INFO] Started server process [1911]
+2026-04-13T21:55:41.8077189Z [2026-04-13 21:55:41 +0000] [1911] [INFO] Waiting for application startup.
+2026-04-13T21:55:41.8077942Z [2026-04-13 21:55:41 +0000] [1911] [INFO] Application startup complete.

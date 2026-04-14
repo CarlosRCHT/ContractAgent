@@ -106,3 +106,48 @@
 2026-04-13T21:33:22.3581537Z Container spec TerminationMessagePolicy  path 
 2026-04-13T21:33:22.3678873Z Container is terminated. Total time elapsed: 17449 ms.
 2026-04-13T21:33:22.3764289Z Site: contract-redline-app stopped.
+2026-04-13T21:53:05.8934588Z State: Starting, Action: EstablishingSiteNetworks, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-04-13T21:53:14.7571899Z State: Starting, Action: StartingMsiContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-04-13T21:53:39.0942121Z State: Starting, Action: StartingSiteContainers, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: , DetailsLevel: INFO
+2026-04-13T21:53:39.0966159Z Container start method called.
+2026-04-13T21:53:39.0969855Z State: Starting, Action: PullingImage, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pulling image 10.1.0.4:13209/appsvc/python:3.11_20260203.2.tuxprod for contract-redline-app., DetailsLevel: INFO
+2026-04-13T21:53:39.0971948Z Establishing network.
+2026-04-13T21:53:39.0973228Z Pulling image: appsvc/python:3.11_20260203.2.tuxprod.
+2026-04-13T21:53:39.8949445Z Container is starting.
+2026-04-13T21:53:39.8966248Z State: Starting, Action: MountingVolumes, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Mounting volumes for contract-redline-app., DetailsLevel: INFO
+2026-04-13T21:53:39.9061650Z Establishing user namespace if not established already.
+2026-04-13T21:53:39.9066756Z Establishing network if not established already.
+2026-04-13T21:53:39.9073958Z Mounting volumes.
+2026-04-13T21:53:39.9154717Z Nested mountpoint 
+2026-04-13T21:53:39.9949741Z Nested mountpoint volatile/logs
+2026-04-13T21:53:40.1753623Z Nested mountpoint 
+2026-04-13T21:53:40.4247079Z Nested mountpoint 
+2026-04-13T21:53:40.5249576Z Nested mountpoint 
+2026-04-13T21:53:41.7092318Z State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Finished pulling container image and mounting volumes for contract-redline-app. Allocatinng the rest of the container resources to finish container creation., DetailsLevel: INFO
+2026-04-13T21:53:41.7093604Z Creating container.
+2026-04-13T21:53:41.8402983Z Creating pipes for streaming container io.
+2026-04-13T21:53:41.8416799Z Creating stdout named pipe at /podr/container/pipe/0726093ffb40_contract-redline-app/stdout_e29df3b65808497c8dbfc5dabcb3a2c9.
+2026-04-13T21:53:41.8421581Z Successfully created stdout named pipe at: /podr/container/pipe/0726093ffb40_contract-redline-app/stdout_e29df3b65808497c8dbfc5dabcb3a2c9.
+2026-04-13T21:53:41.8425525Z Opening named pipe /podr/container/pipe/0726093ffb40_contract-redline-app/stdout_e29df3b65808497c8dbfc5dabcb3a2c9 for reading in non-blocking mode.
+2026-04-13T21:53:41.8487859Z Successfully opened named pipe: /podr/container/pipe/0726093ffb40_contract-redline-app/stdout_e29df3b65808497c8dbfc5dabcb3a2c9.
+2026-04-13T21:53:41.8579694Z Successfully removed non-blocking flag from /podr/container/pipe/0726093ffb40_contract-redline-app/stdout_e29df3b65808497c8dbfc5dabcb3a2c9.
+2026-04-13T21:53:41.8669338Z Creating stderr named pipe at /podr/container/pipe/0726093ffb40_contract-redline-app/stderr_7577d5d40ace4f999a1f193601a527df.
+2026-04-13T21:53:41.8835973Z Successfully created stderr named pipe at: /podr/container/pipe/0726093ffb40_contract-redline-app/stderr_7577d5d40ace4f999a1f193601a527df.
+2026-04-13T21:53:41.8837281Z Opening named pipe /podr/container/pipe/0726093ffb40_contract-redline-app/stderr_7577d5d40ace4f999a1f193601a527df for reading in non-blocking mode.
+2026-04-13T21:53:41.8838640Z Successfully opened named pipe: /podr/container/pipe/0726093ffb40_contract-redline-app/stderr_7577d5d40ace4f999a1f193601a527df.
+2026-04-13T21:53:41.8839577Z Successfully removed non-blocking flag from /podr/container/pipe/0726093ffb40_contract-redline-app/stderr_7577d5d40ace4f999a1f193601a527df.
+2026-04-13T21:53:41.8934632Z Creating container with image: appsvc/python:3.11_20260203.2.tuxprod from registry: 10.1.0.4:13209 and fully qualified image name: 10.1.0.4:13209/appsvc/python:3.11_20260203.2.tuxprod
+2026-04-13T21:53:43.6505024Z Starting container: 0726093ffb40_contract-redline-app.
+2026-04-13T21:53:43.8030101Z Starting watchers and probes.
+2026-04-13T21:53:43.8302917Z Starting metrics collection.
+2026-04-13T21:53:43.8313070Z Container is running.
+2026-04-13T21:53:43.8456006Z State: Starting, Action: CreatingContainer, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container contract-redline-app successfully created and is running., DetailsLevel: INFO
+2026-04-13T21:53:44.1549636Z Container start method finished after 5058 ms.
+2026-04-13T21:53:44.2070044Z State: Starting, Action: InitiatingSiteWarmUpProbe, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Container contract-redline-app successfully created and is running., DetailsLevel: INFO
+2026-04-13T21:53:44.2104164Z State: Starting, Action: WaitingForSiteWarmUpProbeSuccess, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Pinging warmup path to ensure container is ready to receive requests., DetailsLevel: INFO
+2026-04-13T21:55:42.1926550Z Site startup probe succeeded after 117.7668913 seconds.
+2026-04-13T21:55:42.6486589Z State: Starting, Action: WarmUpProbeSucceeded, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site startup probe succeeded after 117.7668913 seconds., DetailsLevel: INFO
+2026-04-13T21:55:43.9386376Z Site is running with deployment version: f207f4d2-97d7-48a3-a3c2-3962370a678f
+2026-04-13T21:55:43.9506725Z Site started.
+2026-04-13T21:55:43.9513717Z State: Started, Action: None, LastError: , LastErrorTimestamp: 01/01/0001 00:00:00, LastErrorDetails: , Details: Site started at 04/13/2026 21:55:43 (UTC), DetailsLevel: INFO
+2026-04-13T21:55:43.9726805Z Site is running with patch version PYTHON 3.11.14

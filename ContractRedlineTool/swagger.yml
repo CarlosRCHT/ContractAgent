@@ -245,11 +245,11 @@ definitions:
         type: string
       recommendations:
         title: Recommendations
-        description: List of changes to apply
-        minItems: 1
-        type: array
-        items:
-          $ref: '#/definitions/Recommendation'
+        description: >-
+          JSON string containing an array of recommended changes. Each object
+          must have: originalText, replacementText, rationale, riskLevel
+          (major/moderate/minor), and section.
+        type: string
       author:
         title: Author
         description: Author name for tracked changes and comments

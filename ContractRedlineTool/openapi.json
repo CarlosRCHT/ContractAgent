@@ -316,13 +316,9 @@
             "description": "Full URL to the Word document in SharePoint"
           },
           "recommendations": {
-            "items": {
-              "$ref": "#/components/schemas/Recommendation"
-            },
-            "type": "array",
-            "minItems": 1,
+            "type": "string",
             "title": "Recommendations",
-            "description": "List of changes to apply"
+            "description": "JSON string containing an array of recommended changes. Each object must have: originalText, replacementText, rationale, riskLevel (major/moderate/minor), and section."
           },
           "author": {
             "type": "string",
