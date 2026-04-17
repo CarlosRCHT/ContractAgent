@@ -41,6 +41,7 @@ graph LR
 ```
 ContractAgent/
 ├── .github/                                  # Copilot instructions and project guidance
+├── .gitignore
 ├── Azure/
 │   └── ContractRedlineTool/                  # FastAPI redline microservice + deployment assets
 │       ├── app/                              # Application code (routers, services, models)
@@ -64,6 +65,20 @@ ContractAgent/
 │   ├── redline-tool.md
 │   ├── requirements.md
 │   └── solution.md
+├── Documents/                                # Source contracts, policies, and templates
+│   ├── Compliance/
+│   │   ├── compliance-checklist.docx
+│   │   └── corporate-procurement-policy.docx
+│   ├── Contracts/
+│   │   ├── sample-contract-compliant.docx
+│   │   ├── sample-contract-expired-terms.docx
+│   │   ├── sample-contract-high-risk.docx
+│   │   └── sample-contract-missing-clauses.docx
+│   ├── Legal/
+│   │   └── legal-review-playbook.docx
+│   └── Templates/
+│       ├── contract-template-nda.docx
+│       └── contract-template-vendor-agreement.docx
 ├── Fabric/
 │   ├── Data/                                 # Lakehouse sample CSV data
 │   │   ├── contracts.csv
@@ -73,7 +88,6 @@ ContractAgent/
 │   │   └── spend_actuals.csv
 │   ├── Example queries.md
 │   └── Instructions.md
-├── Knowledge/                                # Policy, template, and sample contract knowledge base
 ├── CODE_OF_CONDUCT.md
 ├── LICENSE
 ├── SECURITY.md
