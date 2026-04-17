@@ -1,0 +1,7 @@
+mcs.metadata:
+  componentName: Legal
+  description: This knowledge source provides information found in Legal SharePoint.
+kind: KnowledgeSourceConfiguration
+source:
+  kind: SharePointSearchSource
+  site: https://onemtc.sharepoint.com/sites/Procurement/Shared%20Documents/Legal
