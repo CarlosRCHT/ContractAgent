@@ -1,0 +1,7 @@
+mcs.metadata:
+  componentName: Contract templates
+  description: This knowledge source provides information found in Contract templates SharePoint.
+kind: KnowledgeSourceConfiguration
+source:
+  kind: SharePointSearchSource
+  site: https://onemtc.sharepoint.com/sites/Procurement/Contract%20templates

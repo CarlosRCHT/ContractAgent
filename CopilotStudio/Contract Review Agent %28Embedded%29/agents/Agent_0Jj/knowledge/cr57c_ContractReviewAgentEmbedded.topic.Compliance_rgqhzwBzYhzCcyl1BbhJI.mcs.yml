@@ -1,0 +1,7 @@
+mcs.metadata:
+  componentName: Compliance
+  description: This knowledge source provides information found in Compliance SharePoint.
+kind: KnowledgeSourceConfiguration
+source:
+  kind: SharePointSearchSource
+  site: https://onemtc.sharepoint.com/sites/Procurement/Shared%20Documents/Compliance

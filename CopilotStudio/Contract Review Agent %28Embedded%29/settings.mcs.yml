@@ -1,0 +1,26 @@
+﻿displayName: Contract Review Agent (Embedded)
+schemaName: cr57c_ContractReviewAgentEmbedded
+accessControlPolicy: GroupMembership
+authenticationMode: Integrated
+authenticationTrigger: Always
+configuration:
+  settings:
+    GenerativeActionsEnabled: true
+
+  isAgentConnectable: true
+  gPTSettings:
+    defaultSchemaName: cr57c_ContractReviewAgentEmbedded.gpt.default
+
+  aISettings:
+    useModelKnowledge: true
+    isFileAnalysisEnabled: true
+    isSemanticSearchEnabled: true
+    contentModeration: Low
+    optInUseLatestModels: false
+
+  recognizer:
+    kind: GenerativeAIRecognizer
+
+publishedOn: 2026-04-15T15:04:35.0000000Z
+template: default-2.1.0
+language: 1033

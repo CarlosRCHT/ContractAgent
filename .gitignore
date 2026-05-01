@@ -1,0 +1,9 @@
+# Local secrets and certificates
+Azure/ContractRedlineTool/.env
+Azure/ContractRedlineTool/client-cert.pfx
+Azure/ContractRedlineTool/client-cert.cer
+Azure/ContractRedlineTool/client-cert.pem
+
+# Local Python environment and runtime logs
+Azure/ContractRedlineTool/.venv/
+Azure/ContractRedlineTool/app_logs/

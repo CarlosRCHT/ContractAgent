@@ -1,7 +1,0 @@
-mcs.metadata:
-  componentName: Contracts
-  description: This knowledge source provides information found in Contracts SharePoint.
-kind: KnowledgeSourceConfiguration
-source:
-  kind: SharePointSearchSource
-  site: https://onemtc.sharepoint.com/sites/OneMTCCanada/Shared%20Documents/Contracts

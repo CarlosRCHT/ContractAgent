@@ -40,100 +40,90 @@ graph LR
 
 ```
 ContractAgent/
-├── ContractAgent/             # Orchestrator agent (hub)
-│   ├── agent.mcs.yml          # Agent instructions & config
-│   ├── settings.mcs.yml       # Copilot Studio settings
-│   ├── agents/                # Connected sub-agent references
-│   │   ├── ComplianceRiskAgent/
-│   │   ├── ContractIntakeAgent/
-│   │   ├── LegalReviewAgent/
-│   │   ├── PortfolioIntelligenceAgent/
-│   │   └── ReportingAgent/
-│   ├── knowledge/             # SharePoint knowledge source configs
-│   └── topics/                # Conversation flow topics
-├── ContractIntakeAgent/       # Contract classification & triage
-├── LegalReviewAgent/          # Clause review against legal playbook
-├── ComplianceRiskAgent/       # Multi-domain compliance checks
-├── ReportingAgent/            # Executive summary generation
-├── PortfolioIntelligenceAgent/# Lakehouse analytics & benchmarking
-├── ContractRedlineTool/       # Python FastAPI microservice
-│   ├── app/                   # Application code
-│   ├── tests/                 # Pytest test suite
-│   └── deploy/                # Bicep IaC & deployment config
-├── documentation/             # Architecture, design, requirements
-│   └── sample-data/           # Sample contracts, policies, Fabric CSVs
-└── persona/                   # Stakeholder personas for testing
+├── .github/                                  # Copilot instructions and project guidance
+├── Azure/
+│   └── ContractRedlineTool/                  # FastAPI redline microservice + deployment assets
+│       ├── app/                              # Application code (routers, services, models)
+│       ├── deploy/                           # App Service/Bicep deployment configuration
+│       ├── tests/                            # Pytest suite
+│       ├── Dockerfile
+│       ├── openapi.json
+│       ├── swagger.yml
+│       └── requirements.txt
+├── CopilotStudio/
+│   └── Contract Review Agent (Embedded)/     # Copilot Studio agent package
+│       ├── actions/                          # Connected actions (Fabric, Redline, Outlook)
+│       ├── agents/                           # Connected sub-agents
+│       ├── topics/                           # Conversation topics and orchestration flows
+│       ├── trigger/
+│       ├── workflows/
+│       ├── agent.mcs.yml
+│       └── settings.mcs.yml
+├── Documentation/                            # Solution architecture and requirements docs
+│   ├── design.md
+│   ├── redline-tool.md
+│   ├── requirements.md
+│   └── solution.md
+├── Fabric/
+│   ├── Data/                                 # Lakehouse sample CSV data
+│   │   ├── contracts.csv
+│   │   ├── contract_clauses.csv
+│   │   ├── vendors.csv
+│   │   ├── compliance_incidents.csv
+│   │   └── spend_actuals.csv
+│   ├── Example queries.md
+│   └── Instructions.md
+├── Knowledge/                                # Policy, template, and sample contract knowledge base
+├── CODE_OF_CONDUCT.md
+├── LICENSE
+├── SECURITY.md
+└── README.md
 ```
 
 ## Copilot Studio Agents
 
-All agents use `.mcs.yml` format and specify `modelNameHint: opus4-1`. The orchestrator uses `GenerativeAIRecognizer` with `GenerativeActionsEnabled: true` for dynamic routing.
+This repo contains an embedded Copilot Studio package: `Contract Review Agent (Embedded)` (`schemaName: cr57c_ContractReviewAgentEmbedded`).
 
-### Contract Intake Agent
+The orchestrator uses:
 
-Classifies contracts and assesses review urgency.
+- `GenerativeAIRecognizer`
+- `GenerativeActionsEnabled: true`
+- `modelNameHint: opus4-1`
 
-| Capability | Details |
+### Embedded Orchestration Flow
+
+The orchestrator runs an end-to-end automated pipeline when a SharePoint file event triggers the workflow:
+
+1. Extract contract text (`ContractRedlineTool-ExtractplaintextfromaWorddocument`)
+2. Run connected sub-agents (Intake, Compliance Risk, Legal Review)
+3. Route key terms to `ContractPortfolioIntelligence` for benchmarking
+4. Merge recommendations and apply tracked changes (`ContractRedlineTool-Redlineacontractwithtrackedchanges`)
+5. Compile final summary via Reporting Agent
+6. Send output email (`Office365Outlook-SendanemailV2`)
+
+### Connected Sub-Agents
+
+| Folder | Component Name | Role |
+|---|---|---|
+| `agents/Agent/` | Intake Agent | Classifies contract type/urgency and routes required review domains |
+| `agents/Agent_0Jj/` | Compliance Risk Agent | Evaluates tax, insurance, cybersecurity, and regulatory gaps |
+| `agents/Agent_k9d/` | Legal Review Agent | Reviews clause language against legal playbook and policy |
+| `agents/Agent_UK_/` | Reporting Agent | Produces executive summary and actionable recommendations |
+
+### Connected Actions
+
+| Action File | Purpose |
 |---|---|
-| **Contract Types** | Vendor Services, Customer Agreement, NDA, Partnership, Maintenance |
-| **Urgency Levels** | Standard (30-day), Expedited (14-day), Critical (7-day) |
-| **Routing Rules** | Vendor > $100K → Legal + Tax + Insurance; IT/data contracts → add Cybersecurity |
-| **Metadata Collected** | Parties, value, term, jurisdiction, special considerations |
+| `actions/ContractRedlineTool-ExtractplaintextfromaWorddocument.mcs.yml` | Extract raw text from uploaded Word contracts |
+| `actions/ContractRedlineTool-Redlineacontractwithtrackedchanges.mcs.yml` | Apply merged recommendations as Word tracked changes |
+| `actions/ContractPortfolioIntelligence.mcs.yml` | Retrieve portfolio benchmarks and vendor/compliance insights |
+| `actions/Office365Outlook-SendanemailV2.mcs.yml` | Send review output and redline link to uploader |
 
-**Topics:** `ContractClassification`, `UrgencyAssessment`, `ConversationStart`
+### System Topics in Package
 
-### Legal Review Agent
+The embedded package currently includes standard Copilot topics under `topics/`:
 
-Reviews contracts clause-by-clause against Contoso's legal playbook.
-
-| Capability | Details |
-|---|---|
-| **Review Priority** | Liability → Indemnification → Termination → IP → Confidentiality → Data Protection → Force Majeure → Governing Law → Insurance → Payment |
-| **Risk Levels** | Major 🔴 (VP Legal, 15-day SLA), Moderate 🟡 (Senior Counsel, 10-day), Minor 🟢 (notation, 5-day) |
-| **Prohibited Terms** | Unlimited liability, auto-renewal > 3 years, exclusive dealing without board approval, non-compete > 2 years, jury trial waivers, unilateral price increases, liquidated damages > 15% |
-
-**Topics:** `RiskAssessment`, `PlaybookReview`, `ConversationStart`
-
-### Compliance Risk Agent
-
-Verifies compliance across four domains with Green/Yellow/Red scoring.
-
-| Domain | Key Checks |
-|---|---|
-| **Tax** | Domestic sales tax, regional tax, withholding tax (25% default / treaty-reduced), transfer pricing, BEPS |
-| **Insurance** | Tiered minimums ($2M / $5M / $10M by contract value), Contoso as additional insured, AM Best A- rating, 30-day cancellation notice |
-| **Cybersecurity** | SOC 2 Type II, ISO 27001, PCI DSS, data residency, 72-hour breach notification, AES-256 at rest, TLS 1.2+ in transit, MFA, annual pen testing |
-| **Regulatory** | Data privacy regulations, industry-specific, multilingual requirements, WCAG 2.1 AA accessibility |
-
-**Topics:** `InsuranceCyber`, `TaxCompliance`, `RegulatoryCheck`, `ConversationStart`
-
-### Reporting Agent
-
-Compiles findings into structured executive summaries.
-
-| Section | Content |
-|---|---|
-| **Overview** | Contract type, parties, value, term |
-| **Key Terms Table** | Extracted terms in tabular format |
-| **Risk Assessment** | Traffic-light indicators (🔴🟡🟢) from Legal & Compliance |
-| **Recommendations** | Must Fix (blocking) → Should Fix (risk reduction) → Consider (improvement) |
-| **Next Steps** | Action items with owners and deadlines |
-
-**Topics:** `TermExtraction`, `ExecutiveSummary`, `ConversationStart`
-
-### Portfolio Intelligence Agent
-
-Queries a Microsoft Fabric lakehouse for data-grounded portfolio analytics.
-
-| Capability | Details |
-|---|---|
-| **Benchmarking** | Payment terms, liability caps, auto-renewal rates, contract values vs. similar types & vendor tiers; percentile rankings |
-| **Vendor Performance** | Compliance scores, tier classification (Strategic/Preferred/Standard/Probationary), incident history |
-| **Spend Analytics** | Budget vs. actual variance, cost trends by vendor/department/category, YoY analysis |
-| **Renewal Tracking** | Expiring contracts at 30/60/90-day horizons, auto-renewal notice deadlines |
-| **Compliance Trends** | Incident frequency & severity by vendor, type, and department |
-
-**Topics:** `PortfolioBenchmark`, `SpendAnalytics`, `RenewalTracker`, `ConversationStart`
+`ConversationStart`, `Greeting`, `Search`, `Fallback`, `OnError`, `Escalate`, `Signin`, `StartOver`, `ResetConversation`, `ThankYou`, `Goodbye`, `MultipleTopicsMatched`, `EndofConversation`.
 
 ## Contract Redline Tool
 
@@ -394,3 +384,7 @@ The `documentation/sample-data/` directory contains test contracts and policy do
 | Hosting | Azure App Service (Linux, B1 SKU) |
 | Authentication | System-assigned Managed Identity (prod), Certificate/Secret (dev) |
 | Testing | pytest, pytest-asyncio, FastAPI TestClient |
+
+
+_This project is provided as sample code for learning purposes only.
+It is not production-ready, is provided "as is", and is not supported by Microsoft._
