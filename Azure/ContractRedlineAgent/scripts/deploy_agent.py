@@ -18,6 +18,7 @@ import logging
 import os
 import sys
 from pathlib import Path
+from urllib.parse import urlparse, parse_qs
 
 import jsonref
 from dotenv import load_dotenv
@@ -93,7 +94,27 @@ def main() -> None:
             )
             continue
         spec = jsonref.loads(spec_path.read_text(encoding="utf-8"))
-        spec["servers"] = [{"url": logic_app_url}]
+
+        # Split the Logic App URL into base (server) and SAS query params.
+        # Foundry strips query params from server URLs, so SAS auth params
+        # must be declared as fixed query parameters in the operation.
+        parsed = urlparse(logic_app_url)
+        base_url = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
+        sas_params = parse_qs(parsed.query)
+
+        spec["servers"] = [{"url": base_url}]
+
+        # Inject SAS query parameters into the operation
+        operation = spec["paths"]["/"]["post"]
+        params = operation.get("parameters", [])
+        for param_name, values in sas_params.items():
+            params.append({
+                "name": param_name,
+                "in": "query",
+                "required": True,
+                "schema": {"type": "string", "enum": [values[0]]},
+            })
+        operation["parameters"] = params
 
         tools.append({
             "type": "openapi",
