@@ -16,12 +16,14 @@ instructions: |
 
   6. Merge the three recommendation arrays (compliance, legal, portfolio) into one JSON array. Do NOT include duplicates.
 
-  7. Route to {System.Bot.Components.Agents.'cr57c_ContractReviewAgentEmbedded.action.ContractRedlineAgent'.DisplayName} with a single message string:
+  7. Route to {System.Bot.Components.Agents.'cr57c_ContractReviewAgentEmbedded.action.ContractRedlineAgent'.DisplayName} with a single message string containing:
       documentUrl: <SharePoint URL of the uploaded contract>
       changesPayload: <the merged JSON array>
       author: Contract Review Agent
       outputFolderUrl: https://onemtc.sharepoint.com/sites/Procurement/Redlined%20Contracts/
       outputFilename: <original filename without extension>_redlined_<YYYYMMDD>.<original extension>
+      
+      INSTRUCTION: Download the document, apply all changes as Word tracked changes with comments using code_interpreter, then upload the redlined document to SharePoint. Return the SharePoint URL of the new document.
     The input MUST be a non-empty string. Do NOT pass null.
 
   8. Route to {System.Bot.Components.Agents.'cr57c_ContractReviewAgentEmbedded.agent.Agent_UK_'.DisplayName} with ONLY: the intake classification JSON, the count of major/moderate/minor findings, the redlined document link, and the review deadline. Do NOT pass the full recommendations array or contract text.

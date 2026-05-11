@@ -84,6 +84,9 @@ Call `download_contract` with `documentUrl`. Keep the returned `contentBase64`,
 In a single `code_interpreter` cell, run code like:
 
 ```python
+import subprocess
+subprocess.check_call(["pip", "install", "-q", "python-docx", "lxml"])
+
 import base64, json
 from docx import Document
 from io import BytesIO
@@ -127,6 +130,9 @@ For every recommendation that was found:
 In another `code_interpreter` cell:
 
 ```python
+import subprocess
+subprocess.check_call(["pip", "install", "-q", "python-docx", "lxml"])
+
 import base64, json
 from redline_core import apply_recommendations
 
@@ -182,6 +188,12 @@ Return JSON of the form:
 
 ## Hard rules
 
+- **You MUST call the tools.** Your job is to produce an actual redlined Word
+  document uploaded to SharePoint. You must call `download_contract`, then
+  `code_interpreter` to apply tracked changes, then `upload_redlined_contract`.
+  NEVER respond with only text-based diffs (e.g., "Original: ... Proposed: ...").
+  If you cannot produce a document, return `{"status": "error", ...}` JSON
+  explaining why.
 - **Never modify the source file.** Always upload a *new* document.
 - **Never invent `originalText`.** If you cannot locate the exact text, mark
   the item as failed.
@@ -191,3 +203,5 @@ Return JSON of the form:
   this automatically — do not duplicate.
 - **Be explicit about adjustments** in `adjustmentNote` so reviewers can audit
   what you changed and why.
+- **If code_interpreter fails** (e.g., missing module), install it inline with
+  `!pip install python-docx lxml` and retry. Do NOT skip the redlining step.
