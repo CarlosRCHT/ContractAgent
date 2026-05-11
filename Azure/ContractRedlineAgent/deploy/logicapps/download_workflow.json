@@ -23,7 +23,19 @@
       "runAfter": {},
       "inputs": {
         "method": "GET",
-        "uri": "https://graph.microsoft.com/v1.0/shares/u!@{base64(replace(replace(replace(triggerBody()?['documentUrl'],'+','-'),'/','_'),'=',''))}/driveItem?$select=id,name,parentReference,webUrl",
+        "uri": "https://graph.microsoft.com/v1.0/shares/u!@{replace(replace(replace(base64(triggerBody()?['documentUrl']),'+','-'),'/','_'),'=','')}/driveItem?$select=id,name,parentReference,webUrl",
+        "authentication": {
+          "type": "ManagedServiceIdentity",
+          "audience": "https://graph.microsoft.com"
+        }
+      }
+    },
+    "Get_download_url": {
+      "type": "Http",
+      "runAfter": { "Resolve_drive_item_from_share_url": ["Succeeded"] },
+      "inputs": {
+        "method": "GET",
+        "uri": "https://graph.microsoft.com/v1.0/drives/@{body('Resolve_drive_item_from_share_url')?['parentReference']?['driveId']}/items/@{body('Resolve_drive_item_from_share_url')?['id']}?select=id,name,@microsoft.graph.downloadUrl",
         "authentication": {
           "type": "ManagedServiceIdentity",
           "audience": "https://graph.microsoft.com"
@@ -32,14 +44,10 @@
     },
     "Download_content": {
       "type": "Http",
-      "runAfter": { "Resolve_drive_item_from_share_url": ["Succeeded"] },
+      "runAfter": { "Get_download_url": ["Succeeded"] },
       "inputs": {
         "method": "GET",
-        "uri": "https://graph.microsoft.com/v1.0/drives/@{body('Resolve_drive_item_from_share_url')?['parentReference']?['driveId']}/items/@{body('Resolve_drive_item_from_share_url')?['id']}/content",
-        "authentication": {
-          "type": "ManagedServiceIdentity",
-          "audience": "https://graph.microsoft.com"
-        }
+        "uri": "@{body('Get_download_url')?['@microsoft.graph.downloadUrl']}"
       }
     },
     "Build_parent_folder_url": {

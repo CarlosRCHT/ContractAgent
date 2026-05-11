@@ -27,7 +27,7 @@
       "runAfter": {},
       "inputs": {
         "method": "GET",
-        "uri": "https://graph.microsoft.com/v1.0/shares/u!@{base64(replace(replace(replace(coalesce(triggerBody()?['parentFolderUrl'],''),'+','-'),'/','_'),'=',''))}/driveItem?$select=id,parentReference",
+        "uri": "https://graph.microsoft.com/v1.0/shares/u!@{replace(replace(replace(base64(coalesce(triggerBody()?['parentFolderUrl'],'')),'+','-'),'/','_'),'=','')}/driveItem?$select=id,parentReference",
         "authentication": {
           "type": "ManagedServiceIdentity",
           "audience": "https://graph.microsoft.com"
