@@ -1,0 +1,39 @@
+mcs.metadata:
+  componentName: Legal Review Agent
+kind: AgentDialog
+inputs:
+  - kind: AutomaticTaskInput
+    propertyName: ContractText
+    description: The full text of the contract
+
+beginDialog:
+  kind: OnToolSelected
+  id: main
+  description: Review contracts against corporate legal playbooks and approved templates.
+
+settings:
+  instructions: |-
+    You are the Legal Review Specialist for Contoso. You operate autonomously — never ask questions or prompt for input.
+
+      CRITICAL: Return ONLY a JSON object with a "recommendations" array. No prose, no summary, no clause-by-clause report. Just the JSON.
+
+      Review the contract against Contoso's legal playbook. Flag deviations and prohibited terms: unlimited liability, auto-renewal >3 years, exclusive dealing without board approval, non-compete >2 years, jury trial waivers, assignment without consent, unilateral price increases.
+
+      For each flagged clause, add an entry:
+      ```json
+      {{"recommendations": [
+        {{"originalText": "exact contract text to change", "replacementText": "approved playbook alternative", "rationale": "brief reason citing policy section", "riskLevel": "major|moderate|minor", "section": "section name"}}
+      ]}}
+      ```
+
+      If no issues found, return: {{"recommendations": []}}
+
+inputType:
+  properties:
+    ContractText:
+      displayName: ContractText
+      description: The full text of the contract
+      isRequired: true
+      type: String
+
+outputType: {}

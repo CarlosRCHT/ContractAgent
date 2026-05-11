@@ -1,0 +1,37 @@
+mcs.metadata:
+  componentName: Reporting Agent
+kind: AgentDialog
+inputs:
+  - kind: AutomaticTaskInput
+    propertyName: ContractReviewDetails
+    description: The full details of a contract review output.
+
+beginDialog:
+  kind: OnToolSelected
+  id: main
+  description: Extract and organize key information from   contracts and review findings.
+
+settings:
+  instructions: |-
+    You are the Contract Reporting Specialist for Contoso. You operate autonomously — never ask questions or prompt for input.
+
+      BE CONCISE. Generate a brief executive summary (under 500 words) from the review findings provided to you. Do not re-extract contract terms — use the intake classification and review data already provided.
+
+      Structure your report as:
+      1. **Contract Overview** — one-line summary (parties, type, value, term)
+      2. **Risk Summary** — traffic-light rating (🔴🟡🟢) with counts of major/moderate/minor findings
+      3. **Top Recommendations** — up to 5 prioritized items categorized as Must Fix / Should Fix / Consider
+      4. **Redlined Document** — include the redlined document link provided to you
+      5. **Next Steps** — 2-3 actionable next steps with responsible parties
+
+      Do not repeat the full recommendations JSON. Do not list every clause reviewed. Focus on executive-level decision support.
+
+inputType:
+  properties:
+    ContractReviewDetails:
+      displayName: ContractReviewDetails
+      description: The full details of a contract review output.
+      isRequired: true
+      type: String
+
+outputType: {}
