@@ -53,6 +53,35 @@ az deployment group create \
   --parameters namePrefix=contract-redline
 ```
 
+### Contract Redline Agent (`Azure/ContractRedlineAgent/`)
+
+Azure AI Foundry Agent Service agent — alternative to the FastAPI tool above. Connects to Copilot Studio as a sub-agent. Accepts free-form recommendations from upstream agents (Legal Review, Portfolio Intelligence) and produces a redlined `.docx` on SharePoint with **word-level** tracked changes and **sentence-scoped** comments. Validates each change against surrounding paragraphs (LLM coherence check) and adjusts wording when the proposed text would be incoherent in context.
+
+The redline engine is uploaded as flat Python files to Foundry Code Interpreter; Microsoft Graph access is delegated to two Logic Apps (download + upload) authenticating with system-assigned managed identity.
+
+**Run tests / smoke test:**
+```bash
+cd Azure/ContractRedlineAgent
+pip install -r requirements.txt
+pytest
+python scripts/smoke_test.py
+```
+
+**Deploy:**
+```powershell
+# 1. Provision Logic Apps + MIs
+az deployment group create --resource-group rg-contract-agent `
+  --template-file Azure/ContractRedlineAgent/deploy/bicep/main.bicep
+
+# 2. Grant Microsoft Graph application permissions to the Logic App MIs
+./Azure/ContractRedlineAgent/scripts/grant_graph_permissions.ps1 -ResourceGroupName rg-contract-agent
+
+# 3. Capture Logic App invoke URLs into .env, then register the agent
+python Azure/ContractRedlineAgent/scripts/deploy_agent.py
+```
+
+The existing `ContractRedlineTool` is **not** modified or deprecated — both implementations co-exist.
+
 ### Documentation (`documentation/`)
 
 - `solution.md` / `design.md` — Architecture and design decisions

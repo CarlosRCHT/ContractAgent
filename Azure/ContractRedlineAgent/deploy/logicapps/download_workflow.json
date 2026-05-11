@@ -1,0 +1,68 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {},
+  "triggers": {
+    "manual": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "required": ["documentUrl"],
+          "properties": {
+            "documentUrl": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "actions": {
+    "Resolve_drive_item_from_share_url": {
+      "type": "Http",
+      "runAfter": {},
+      "inputs": {
+        "method": "GET",
+        "uri": "https://graph.microsoft.com/v1.0/shares/u!@{base64(replace(replace(replace(triggerBody()?['documentUrl'],'+','-'),'/','_'),'=',''))}/driveItem?$select=id,name,parentReference,webUrl",
+        "authentication": {
+          "type": "ManagedServiceIdentity",
+          "audience": "https://graph.microsoft.com"
+        }
+      }
+    },
+    "Download_content": {
+      "type": "Http",
+      "runAfter": { "Resolve_drive_item_from_share_url": ["Succeeded"] },
+      "inputs": {
+        "method": "GET",
+        "uri": "https://graph.microsoft.com/v1.0/drives/@{body('Resolve_drive_item_from_share_url')?['parentReference']?['driveId']}/items/@{body('Resolve_drive_item_from_share_url')?['id']}/content",
+        "authentication": {
+          "type": "ManagedServiceIdentity",
+          "audience": "https://graph.microsoft.com"
+        }
+      }
+    },
+    "Build_parent_folder_url": {
+      "type": "Compose",
+      "runAfter": { "Download_content": ["Succeeded"] },
+      "inputs": "@{body('Resolve_drive_item_from_share_url')?['webUrl']}"
+    },
+    "Response": {
+      "type": "Response",
+      "kind": "Http",
+      "runAfter": { "Build_parent_folder_url": ["Succeeded"] },
+      "inputs": {
+        "statusCode": 200,
+        "headers": { "Content-Type": "application/json" },
+        "body": {
+          "contentBase64": "@{base64(body('Download_content'))}",
+          "filename": "@{body('Resolve_drive_item_from_share_url')?['name']}",
+          "driveId": "@{body('Resolve_drive_item_from_share_url')?['parentReference']?['driveId']}",
+          "parentItemId": "@{body('Resolve_drive_item_from_share_url')?['parentReference']?['id']}",
+          "parentFolderUrl": "@{outputs('Build_parent_folder_url')}"
+        }
+      }
+    }
+  },
+  "outputs": {}
+}

@@ -21,7 +21,7 @@ isCustomizable:
   value: true
   canBeChanged: true
   managedPropertyLogicalName: iscustomizableanddeletable
-businessProcessType: 0
+businessProcessType: 
 isCustomProcessingStepAllowedForOtherPublishers:
   value: true
   canBeChanged: true

@@ -1,0 +1,295 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.43.8.12551",
+      "templateHash": "7667080772285242847"
+    }
+  },
+  "parameters": {
+    "namePrefix": {
+      "type": "string",
+      "defaultValue": "contract-redline",
+      "metadata": {
+        "description": "Prefix for Logic App names."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Azure region."
+      }
+    },
+    "tags": {
+      "type": "object",
+      "defaultValue": {
+        "workload": "contract-redline-agent"
+      },
+      "metadata": {
+        "description": "Tags to apply to all resources."
+      }
+    }
+  },
+  "variables": {
+    "$fxv#0": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {},
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "documentUrl"
+              ],
+              "properties": {
+                "documentUrl": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "Resolve_drive_item_from_share_url": {
+          "type": "Http",
+          "runAfter": {},
+          "inputs": {
+            "method": "GET",
+            "uri": "https://graph.microsoft.com/v1.0/shares/u!@{base64(replace(replace(replace(triggerBody()?['documentUrl'],'+','-'),'/','_'),'=',''))}/driveItem?$select=id,name,parentReference,webUrl",
+            "authentication": {
+              "type": "ManagedServiceIdentity",
+              "audience": "https://graph.microsoft.com"
+            }
+          }
+        },
+        "Download_content": {
+          "type": "Http",
+          "runAfter": {
+            "Resolve_drive_item_from_share_url": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "method": "GET",
+            "uri": "https://graph.microsoft.com/v1.0/drives/@{body('Resolve_drive_item_from_share_url')?['parentReference']?['driveId']}/items/@{body('Resolve_drive_item_from_share_url')?['id']}/content",
+            "authentication": {
+              "type": "ManagedServiceIdentity",
+              "audience": "https://graph.microsoft.com"
+            }
+          }
+        },
+        "Build_parent_folder_url": {
+          "type": "Compose",
+          "runAfter": {
+            "Download_content": [
+              "Succeeded"
+            ]
+          },
+          "inputs": "@{body('Resolve_drive_item_from_share_url')?['webUrl']}"
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "runAfter": {
+            "Build_parent_folder_url": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "contentBase64": "@{base64(body('Download_content'))}",
+              "filename": "@{body('Resolve_drive_item_from_share_url')?['name']}",
+              "driveId": "@{body('Resolve_drive_item_from_share_url')?['parentReference']?['driveId']}",
+              "parentItemId": "@{body('Resolve_drive_item_from_share_url')?['parentReference']?['id']}",
+              "parentFolderUrl": "@{outputs('Build_parent_folder_url')}"
+            }
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "$fxv#1": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {},
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "Http",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "contentBase64",
+                "filename"
+              ],
+              "properties": {
+                "contentBase64": {
+                  "type": "string"
+                },
+                "filename": {
+                  "type": "string"
+                },
+                "driveId": {
+                  "type": "string"
+                },
+                "parentItemId": {
+                  "type": "string"
+                },
+                "parentFolderUrl": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "actions": {
+        "Resolve_parent_when_url": {
+          "type": "Http",
+          "runAfter": {},
+          "inputs": {
+            "method": "GET",
+            "uri": "https://graph.microsoft.com/v1.0/shares/u!@{base64(replace(replace(replace(coalesce(triggerBody()?['parentFolderUrl'],''),'+','-'),'/','_'),'=',''))}/driveItem?$select=id,parentReference",
+            "authentication": {
+              "type": "ManagedServiceIdentity",
+              "audience": "https://graph.microsoft.com"
+            }
+          }
+        },
+        "Pick_drive_id": {
+          "type": "Compose",
+          "runAfter": {
+            "Resolve_parent_when_url": [
+              "Succeeded",
+              "Failed"
+            ]
+          },
+          "inputs": "@{coalesce(triggerBody()?['driveId'], body('Resolve_parent_when_url')?['parentReference']?['driveId'])}"
+        },
+        "Pick_parent_id": {
+          "type": "Compose",
+          "runAfter": {
+            "Pick_drive_id": [
+              "Succeeded"
+            ]
+          },
+          "inputs": "@{coalesce(triggerBody()?['parentItemId'], body('Resolve_parent_when_url')?['id'])}"
+        },
+        "Upload_content": {
+          "type": "Http",
+          "runAfter": {
+            "Pick_parent_id": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "method": "PUT",
+            "uri": "https://graph.microsoft.com/v1.0/drives/@{outputs('Pick_drive_id')}/items/@{outputs('Pick_parent_id')}:/@{triggerBody()?['filename']}:/content",
+            "headers": {
+              "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            },
+            "body": "@{base64ToBinary(triggerBody()?['contentBase64'])}",
+            "authentication": {
+              "type": "ManagedServiceIdentity",
+              "audience": "https://graph.microsoft.com"
+            }
+          }
+        },
+        "Response": {
+          "type": "Response",
+          "kind": "Http",
+          "runAfter": {
+            "Upload_content": [
+              "Succeeded"
+            ]
+          },
+          "inputs": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "webUrl": "@{body('Upload_content')?['webUrl']}",
+              "id": "@{body('Upload_content')?['id']}",
+              "name": "@{body('Upload_content')?['name']}"
+            }
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "downloadWorkflowName": "[format('{0}-download', parameters('namePrefix'))]",
+    "uploadWorkflowName": "[format('{0}-upload', parameters('namePrefix'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2019-05-01",
+      "name": "[variables('downloadWorkflowName')]",
+      "location": "[parameters('location')]",
+      "tags": "[parameters('tags')]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "state": "Enabled",
+        "definition": "[variables('$fxv#0')]",
+        "parameters": {}
+      }
+    },
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2019-05-01",
+      "name": "[variables('uploadWorkflowName')]",
+      "location": "[parameters('location')]",
+      "tags": "[parameters('tags')]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "state": "Enabled",
+        "definition": "[variables('$fxv#1')]",
+        "parameters": {}
+      }
+    }
+  ],
+  "outputs": {
+    "downloadWorkflowName": {
+      "type": "string",
+      "value": "[variables('downloadWorkflowName')]"
+    },
+    "uploadWorkflowName": {
+      "type": "string",
+      "value": "[variables('uploadWorkflowName')]"
+    },
+    "downloadPrincipalId": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Logic/workflows', variables('downloadWorkflowName')), '2019-05-01', 'full').identity.principalId]"
+    },
+    "uploadPrincipalId": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Logic/workflows', variables('uploadWorkflowName')), '2019-05-01', 'full').identity.principalId]"
+    },
+    "downloadCallbackHint": {
+      "type": "string",
+      "value": "[format('Run: az rest --method post --uri {0}subscriptions/{{sub}}/resourceGroups/{{rg}}/providers/Microsoft.Logic/workflows/{1}/triggers/manual/listCallbackUrl?api-version=2016-06-01', environment().resourceManager, variables('downloadWorkflowName'))]"
+    },
+    "uploadCallbackHint": {
+      "type": "string",
+      "value": "[format('Run: az rest --method post --uri {0}subscriptions/{{sub}}/resourceGroups/{{rg}}/providers/Microsoft.Logic/workflows/{1}/triggers/manual/listCallbackUrl?api-version=2016-06-01', environment().resourceManager, variables('uploadWorkflowName'))]"
+    }
+  }
+}

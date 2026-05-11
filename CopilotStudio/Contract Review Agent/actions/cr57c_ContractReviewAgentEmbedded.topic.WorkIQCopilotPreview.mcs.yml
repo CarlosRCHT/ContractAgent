@@ -1,0 +1,13 @@
+mcs.metadata:
+  componentName: Work IQ Copilot (Preview)
+kind: TaskDialog
+modelDisplayName: Work IQ Copilot (Preview)
+action:
+  kind: InvokeExternalAgentTaskAction
+  connectionReference: cr57c_ContractReviewAgentEmbedded.shared_a365copilotchatmcp.shared-a365copilotch-8ca28286-33c8-46fb-bc50-b7a7ee385faf
+  connectionProperties:
+    mode: Invoker
+
+  operationDetails:
+    kind: ModelContextProtocolMetadata
+    operationId: mcp_m365copilot

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {},
+  "triggers": {
+    "manual": {
+      "type": "Request",
+      "kind": "Http",
+      "inputs": {
+        "schema": {
+          "type": "object",
+          "required": ["contentBase64", "filename"],
+          "properties": {
+            "contentBase64": { "type": "string" },
+            "filename": { "type": "string" },
+            "driveId": { "type": "string" },
+            "parentItemId": { "type": "string" },
+            "parentFolderUrl": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "actions": {
+    "Resolve_parent_when_url": {
+      "type": "Http",
+      "runAfter": {},
+      "inputs": {
+        "method": "GET",
+        "uri": "https://graph.microsoft.com/v1.0/shares/u!@{base64(replace(replace(replace(coalesce(triggerBody()?['parentFolderUrl'],''),'+','-'),'/','_'),'=',''))}/driveItem?$select=id,parentReference",
+        "authentication": {
+          "type": "ManagedServiceIdentity",
+          "audience": "https://graph.microsoft.com"
+        }
+      }
+    },
+    "Pick_drive_id": {
+      "type": "Compose",
+      "runAfter": { "Resolve_parent_when_url": ["Succeeded", "Failed"] },
+      "inputs": "@{coalesce(triggerBody()?['driveId'], body('Resolve_parent_when_url')?['parentReference']?['driveId'])}"
+    },
+    "Pick_parent_id": {
+      "type": "Compose",
+      "runAfter": { "Pick_drive_id": ["Succeeded"] },
+      "inputs": "@{coalesce(triggerBody()?['parentItemId'], body('Resolve_parent_when_url')?['id'])}"
+    },
+    "Upload_content": {
+      "type": "Http",
+      "runAfter": { "Pick_parent_id": ["Succeeded"] },
+      "inputs": {
+        "method": "PUT",
+        "uri": "https://graph.microsoft.com/v1.0/drives/@{outputs('Pick_drive_id')}/items/@{outputs('Pick_parent_id')}:/@{triggerBody()?['filename']}:/content",
+        "headers": {
+          "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        },
+        "body": "@{base64ToBinary(triggerBody()?['contentBase64'])}",
+        "authentication": {
+          "type": "ManagedServiceIdentity",
+          "audience": "https://graph.microsoft.com"
+        }
+      }
+    },
+    "Response": {
+      "type": "Response",
+      "kind": "Http",
+      "runAfter": { "Upload_content": ["Succeeded"] },
+      "inputs": {
+        "statusCode": 200,
+        "headers": { "Content-Type": "application/json" },
+        "body": {
+          "webUrl": "@{body('Upload_content')?['webUrl']}",
+          "id": "@{body('Upload_content')?['id']}",
+          "name": "@{body('Upload_content')?['name']}"
+        }
+      }
+    }
+  },
+  "outputs": {}
+}

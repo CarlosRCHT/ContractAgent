@@ -1,0 +1,17 @@
+﻿connectionReferences:
+  - connectionReferenceLogicalName: cr57c_ContractReviewAgentEmbedded.shared_a365copilotchatmcp.shared-a365copilotch-8ca28286-33c8-46fb-bc50-b7a7ee385faf
+    connectorId: /providers/Microsoft.PowerApps/apis/shared_a365copilotchatmcp
+  - connectionReferenceLogicalName: cr57c_ContractReviewAgentEmbedded.shared_a365memcp.shared-a365memcp-cd9266bf-de70-4d13-ab79-6c317b446850
+    connectorId: /providers/Microsoft.PowerApps/apis/shared_a365memcp
+  - connectionReferenceLogicalName: cr57c_ContractReviewAgentEmbedded.shared_a365wordmcp.5157086d7e8c41d895e744aef7bf56f8
+    connectorId: /providers/Microsoft.PowerApps/apis/shared_a365wordmcp
+  - connectionReferenceLogicalName: cr57c_ContractReviewAgentEmbedded.shared_azureagentservice.179b7e4489734058a3b92177f7a137ab
+    connectorId: /providers/Microsoft.PowerApps/apis/shared_azureagentservice
+  - connectionReferenceLogicalName: cr57c_ContractReviewAgentEmbedded.shared_fabricdataagent.54beb87e1f974f62a9af4f5ef2283595
+    connectorId: /providers/Microsoft.PowerApps/apis/shared_fabricdataagent
+  - connectionReferenceLogicalName: cr57c_ContractReviewAgentEmbedded.shared_office365.shared-office365-13400486-bddd-4fae-8061-489ece3f659b
+    connectorId: /providers/Microsoft.PowerApps/apis/shared_office365
+  - connectionReferenceLogicalName: cr57c_sharedmicrosoftcopilotstudio_d7ffc
+    connectorId: /providers/Microsoft.PowerApps/apis/shared_microsoftcopilotstudio
+  - connectionReferenceLogicalName: new_sharedsharepointonline_e176f
+    connectorId: /providers/Microsoft.PowerApps/apis/shared_sharepointonline

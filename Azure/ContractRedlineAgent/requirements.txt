@@ -1,0 +1,10 @@
+# Runtime dependencies (also used inside the Foundry Code Interpreter sandbox).
+python-docx==1.1.2
+lxml>=5.2.2
+pydantic==2.8.0
+
+# Tooling for deploying / testing the agent locally.
+azure-ai-projects==1.0.0b7
+azure-identity==1.17.0
+python-dotenv==1.0.1
+pytest==8.3.0

@@ -1,0 +1,14 @@
+mcs.metadata:
+  componentName: Work IQ Word MCP - Work IQ Word (Preview)
+kind: TaskDialog
+modelDisplayName: Work IQ Word
+modelDescription: "Work IQ MCP server for Microsoft Word operations. This feature is in preview and is part of the Work IQ tools, providing shared work intelligence and actions for agents. Availability and capabilities are subject to change. Learn more: https://aka.ms/AboutWorkIQ"
+action:
+  kind: InvokeExternalAgentTaskAction
+  connectionReference: cr57c_ContractReviewAgentEmbedded.shared_a365wordmcp.5157086d7e8c41d895e744aef7bf56f8
+  connectionProperties:
+    mode: Invoker
+
+  operationDetails:
+    kind: ModelContextProtocolMetadata
+    operationId: mcp_WordServer

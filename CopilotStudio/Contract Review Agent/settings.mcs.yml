@@ -1,4 +1,4 @@
-﻿displayName: Contract Review Agent (Embedded)
+﻿displayName: Contract Review Agent
 schemaName: cr57c_ContractReviewAgentEmbedded
 accessControlPolicy: GroupMembership
 authenticationMode: Integrated
@@ -21,6 +21,6 @@ configuration:
   recognizer:
     kind: GenerativeAIRecognizer
 
-publishedOn: 2026-04-15T15:04:35.0000000Z
+publishedOn: 2026-05-07T18:53:58.0000000Z
 template: default-2.1.0
 language: 1033

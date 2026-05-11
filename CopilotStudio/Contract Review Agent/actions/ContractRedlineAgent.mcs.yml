@@ -1,0 +1,19 @@
+mcs.metadata:
+  componentName: Contract Redline Agent
+kind: TaskDialog
+inputs:
+  - kind: ManualTaskInput
+    propertyName: AgentId
+    value: contract-redline-agent
+
+modelDisplayName: Contract Redline Agent
+modelDescription: Applies word-level tracked changes and comments to Word documents based on contract review recommendations
+action:
+  kind: InvokeExternalAgentTaskAction
+  connectionReference: cr57c_ContractReviewAgentEmbedded.shared_azureagentservice.179b7e4489734058a3b92177f7a137ab
+  connectionProperties:
+    mode: Invoker
+
+  operationDetails:
+    kind: ActivityProtocolMetadata
+    operationId: SendActivity

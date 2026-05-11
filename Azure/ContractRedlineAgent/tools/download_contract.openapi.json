@@ -1,0 +1,55 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "download_contract",
+    "description": "Download a Microsoft Word contract from SharePoint by URL. Authenticates to Microsoft Graph using the Logic App's system-assigned managed identity.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    { "url": "https://REPLACE_WITH_LOGIC_APP_HOST" }
+  ],
+  "paths": {
+    "/api/download": {
+      "post": {
+        "operationId": "downloadContract",
+        "summary": "Download a contract from SharePoint as base64 bytes.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["documentUrl"],
+                "properties": {
+                  "documentUrl": {
+                    "type": "string",
+                    "description": "Full SharePoint URL to the .docx file."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Resolved drive item with content bytes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "contentBase64": { "type": "string" },
+                    "filename": { "type": "string" },
+                    "driveId": { "type": "string" },
+                    "parentItemId": { "type": "string" },
+                    "parentFolderUrl": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "contract-redline-agent"
+version = "0.1.0"
+description = "Azure AI Foundry agent that applies tracked changes and reviewer comments to Word contracts."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "python-docx==1.1.2",
+    "lxml>=5.2.2",
+    "pydantic==2.8.0",
+]
+
+[project.optional-dependencies]
+deploy = [
+    "azure-ai-projects==1.0.0b7",
+    "azure-identity==1.17.0",
+    "python-dotenv==1.0.1",
+]
+test = ["pytest==8.3.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.setuptools.packages.find]
+where = ["agent/code_files"]

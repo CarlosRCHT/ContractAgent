@@ -1,0 +1,69 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "upload_redlined_contract",
+    "description": "Upload a redlined Word document to SharePoint, returning the new web URL. Authenticates to Microsoft Graph using the Logic App's system-assigned managed identity.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    { "url": "https://REPLACE_WITH_LOGIC_APP_HOST" }
+  ],
+  "paths": {
+    "/api/upload": {
+      "post": {
+        "operationId": "uploadRedlinedContract",
+        "summary": "Upload a redlined contract to a SharePoint folder.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["contentBase64", "filename"],
+                "properties": {
+                  "contentBase64": {
+                    "type": "string",
+                    "description": "Base64-encoded .docx bytes."
+                  },
+                  "filename": {
+                    "type": "string",
+                    "description": "Filename for the uploaded document, e.g. 'MSA_redlined.docx'."
+                  },
+                  "driveId": {
+                    "type": "string",
+                    "description": "Optional Graph drive ID. Provide this OR parentFolderUrl."
+                  },
+                  "parentItemId": {
+                    "type": "string",
+                    "description": "Optional Graph item ID of the parent folder."
+                  },
+                  "parentFolderUrl": {
+                    "type": "string",
+                    "description": "Optional SharePoint folder URL to upload into."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Uploaded item.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "webUrl": { "type": "string" },
+                    "id": { "type": "string" },
+                    "name": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+﻿{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline-1": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "new_sharedsharepointonline_e176f"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_microsoftcopilotstudio": {
+        "api": {
+          "name": "shared_microsoftcopilotstudio"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "cr57c_sharedmicrosoftcopilotstudio_d7ffc"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "When_a_file_is_created_(properties_only)": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "https://onemtc.sharepoint.com/sites/Procurement",
+              "table": "1e0c36a2-a909-42db-886b-ba531ee24886"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetOnNewFileItems",
+              "connectionName": "shared_sharepointonline-1"
+            }
+          },
+          "recurrence": {
+            "interval": 1,
+            "frequency": "Minute"
+          }
+        }
+      },
+      "actions": {
+        "Sends_a_prompt_to_the_specified_copilot_for_processing": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "Copilot": "cr57c_ContractReviewAgentEmbedded",
+              "body/message": "Use content from @{triggerBody()} "
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_microsoftcopilotstudio",
+              "operationId": "ExecuteCopilot",
+              "connectionName": "shared_microsoftcopilotstudio"
+            }
+          },
+          "runAfter": {}
+        }
+      },
+      "description": "Trigger your agent with certain message upon event: When a file is created (properties only)."
+    }
+  },
+  "schemaVersion": "1.0.0.0"
+}
