@@ -93,8 +93,7 @@ def main() -> None:
             )
             continue
         spec = jsonref.loads(spec_path.read_text(encoding="utf-8"))
-        base_url = logic_app_url.rsplit("/api/", 1)[0] if "/api/" in logic_app_url else logic_app_url
-        spec["servers"] = [{"url": base_url}]
+        spec["servers"] = [{"url": logic_app_url}]
 
         tools.append({
             "type": "openapi",
@@ -105,7 +104,7 @@ def main() -> None:
                 "auth": {"type": "anonymous"},
             },
         })
-        logger.info("Registered OpenAPI tool: %s → %s", tool_name, base_url)
+        logger.info("Registered OpenAPI tool: %s", tool_name)
 
     # Build the agent definition, injecting tool_resources via dict key
     definition = PromptAgentDefinition(

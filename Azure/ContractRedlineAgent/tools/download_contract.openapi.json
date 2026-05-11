@@ -9,7 +9,7 @@
     { "url": "https://REPLACE_WITH_LOGIC_APP_HOST" }
   ],
   "paths": {
-    "/api/download": {
+    "/": {
       "post": {
         "operationId": "downloadContract",
         "summary": "Download a contract from SharePoint as base64 bytes.",

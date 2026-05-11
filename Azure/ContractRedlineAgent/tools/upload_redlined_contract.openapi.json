@@ -9,7 +9,7 @@
     { "url": "https://REPLACE_WITH_LOGIC_APP_HOST" }
   ],
   "paths": {
-    "/api/upload": {
+    "/": {
       "post": {
         "operationId": "uploadRedlinedContract",
         "summary": "Upload a redlined contract to a SharePoint folder.",
