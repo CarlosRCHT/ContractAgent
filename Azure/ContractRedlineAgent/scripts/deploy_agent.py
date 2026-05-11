@@ -19,6 +19,7 @@ import os
 import sys
 from pathlib import Path
 
+import jsonref
 from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -47,11 +48,13 @@ def main() -> None:
 
     try:
         from azure.ai.projects import AIProjectClient
-        from azure.ai.projects.models import AgentDefinition
+        from azure.ai.projects.models import (
+            PromptAgentDefinition,
+        )
         from azure.identity import DefaultAzureCredential
     except ImportError:
         sys.exit(
-            "azure-ai-projects is not installed. Run "
+            "azure-ai-projects>=2.0.0 is not installed. Run "
             "`pip install -r requirements.txt` and try again."
         )
 
@@ -83,60 +86,49 @@ def main() -> None:
         ("upload_redlined_contract", "UPLOAD_LOGIC_APP_URL"),
     ]:
         spec_path = TOOLS_DIR / f"{tool_name}.openapi.json"
-        spec = json.loads(spec_path.read_text(encoding="utf-8"))
         logic_app_url = env.get(env_key, "")
         if not logic_app_url:
             logger.warning(
                 "Skipping %s tool — %s not set in .env", tool_name, env_key
             )
             continue
-        # Patch the placeholder server URL with the real Logic App URL
-        base_url = logic_app_url.rsplit("/api/", 1)[0]
+        spec = jsonref.loads(spec_path.read_text(encoding="utf-8"))
+        base_url = logic_app_url.rsplit("/api/", 1)[0] if "/api/" in logic_app_url else logic_app_url
         spec["servers"] = [{"url": base_url}]
+
         tools.append({
             "type": "openapi",
             "openapi": {
                 "name": tool_name,
                 "description": spec["info"]["description"],
                 "spec": spec,
-                "auth": {"type": "none"},
+                "auth": {"type": "anonymous"},
             },
         })
         logger.info("Registered OpenAPI tool: %s → %s", tool_name, base_url)
 
-    definition = AgentDefinition({
-        "kind": "prompt",
-        "model": model,
-        "instructions": instructions,
-        "tools": tools,
-        "tool_resources": {"code_interpreter": {"file_ids": file_ids}},
-    })
+    # Build the agent definition, injecting tool_resources via dict key
+    definition = PromptAgentDefinition(
+        model=model,
+        instructions=instructions,
+        tools=tools,
+    )
+    definition["tool_resources"] = {
+        "code_interpreter": {"file_ids": file_ids},
+    }
 
-    # 3. Check for existing agent and update — otherwise create.
-    existing = None
-    for agent in project_client.agents.list():
-        if agent.get("name") == agent_name or (hasattr(agent, "name") and agent.name == agent_name):
-            existing = agent
-            break
+    # 3. Create a new agent version (idempotent — always creates a new version).
+    logger.info("Creating new version of agent %s", agent_name)
+    agent = project_client.agents.create_version(
+        agent_name=agent_name,
+        definition=definition,
+    )
 
-    if existing:
-        agent_id = existing.get("id") if isinstance(existing, dict) else existing.id
-        logger.info("Updating existing agent %s (id=%s)", agent_name, agent_id)
-        agent = project_client.agents.update(
-            agent_name=agent_id,
-            definition=definition,
-        )
-    else:
-        logger.info("Creating new agent %s", agent_name)
-        agent = project_client.agents.create(
-            name=agent_name,
-            definition=definition,
-        )
-
-    agent_dict = agent.as_dict() if hasattr(agent, "as_dict") else dict(agent)
-    agent_id = agent_dict.get("id", "unknown")
-    logger.info("Done. Agent id: %s", agent_id)
-    print(json.dumps({"agentId": agent_id, "name": agent_name}, indent=2, ensure_ascii=True))
+    logger.info("Done. Agent: %s, version: %s", agent.name, agent.version)
+    print(json.dumps(
+        {"agentName": agent.name, "version": agent.version},
+        indent=2, ensure_ascii=True,
+    ))
 
 
 if __name__ == "__main__":
